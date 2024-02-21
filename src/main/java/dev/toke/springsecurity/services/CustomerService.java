@@ -1,7 +1,6 @@
 package dev.toke.springsecurity.services;
 
-import dev.toke.springsecurity.models.Customer;
-import org.springframework.stereotype.Service;
+import dev.toke.springsecurity.data.models.Customer;
 
 import java.util.List;
 import java.util.Optional;

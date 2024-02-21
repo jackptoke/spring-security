@@ -1,8 +1,7 @@
 package dev.toke.springsecurity.services.impl;
 
-import dev.toke.springsecurity.models.Customer;
+import dev.toke.springsecurity.data.models.Customer;
 import dev.toke.springsecurity.repos.CustomerRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package dev.toke.springsecurity.models;
+package dev.toke.springsecurity.data.models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

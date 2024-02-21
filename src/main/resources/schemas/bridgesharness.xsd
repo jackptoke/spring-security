@@ -1,0 +1,2596 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2005 rel. 3 U (http://www.altova.com) by Mentor Graphics (India) Pvt. Ltd. (Mentor Graphics (India) Pvt. Ltd.) -->
+<xsd:schema xmlns="http://www.mentor.com/harness/Schema/bridgesharness"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            targetNamespace="http://www.mentor.com/harness/Schema/bridgesharness"
+            elementFormDefault="qualified" attributeFormDefault="unqualified" xml:lang="en">
+    <!--                                                                             -->
+    <!--          Mentor Graphics Corp 2006 Bridges Harness Main Schema.             -->
+    <!--                                                                             -->
+    <!--                                                                             -->
+    <!--                Copyright (c) Mentor Graphics Corporation 2006               -->
+    <!--                           All Rights Reserved.                              -->
+    <!--                                                                             -->
+    <!--         THIS WORK CONTAINS TRADE SECRET AND PROPRIETARY INFORMATION         -->
+    <!--           WHICH IS THE PROPERTY OF MENTOR GRAPHICS CORPORATION OR           -->
+    <!--               ITS LICENSORS AND IS SUBJECT TO LICENSE TERMS.                -->
+    <!--                                                                             -->
+    <!--                                                                             -->
+    <!--            Mentor Graphics U.K. Ltd., Mentor House, Edward Court,           -->
+    <!--             Altrincham Business Park, Altrincham, WA14 5GL, UK.             -->
+    <!--                                                                             -->
+    <!--                                                                             -->
+    <!--                      Name    :  bridgesharness.xsd                          -->
+    <!--                      Version :  4_0                                         -->
+    <!--                      Date    :  18th Nov 2009                                -->
+    <!--                                                                             -->
+    <!--                                                                             -->
+    <!--                                                                             -->
+    <!--               START OF bridgesharness SCHEMA DEFINITION                     -->
+    <!--               =========================================                     -->
+    <!--                                                                             -->
+    <!--                                                                             -->
+    <!--       Bridges Harness and Topology Schema annotation, Schema,               -->
+    <!--       information harnessdesign and topologydesign root elements            -->
+    <!--       and document elements / complexTypes.                                 -->
+    <!--                                                                             -->
+    <xsd:annotation>
+        <xsd:documentation>Capital Harness Systems Bridges Harness and Topology Schema.
+        </xsd:documentation>
+        <xsd:appinfo source="http://www.mentor.com/harness/Schema/bridgesharness">
+            <!-- http://www.mentor.com/harness/Schema/bridgesharness -->
+            <!-- http://schemas.xmlsoap.org/soap/envelope/ -->
+            <SchemaInfo name="bridgesharness" date="2009-11-18" version="4_0" status="release"/>
+        </xsd:appinfo>
+    </xsd:annotation>
+    <!--                                                                             -->
+    <!--          Definition of document elements reused by bridgesconnectivity      -->
+    <!--          schema instance document root elements                             -->
+    <!--                                                                             -->
+    <!--                                                                             -->
+    <!--          Start of definition of instance document root element and          -->
+    <!--          complexType definitions                                            -->
+    <!--                                                                             -->
+<!--    <xsd:element name="harnessdesign" type="HarnessDesignType" />-->
+    <xsd:element name="wiringdesign">
+        <xsd:complexType>
+            <xsd:attribute name="name" type="xsd:string"/>
+            <xsd:attribute name="partnumber" type="xsd:string"/>
+            <xsd:attribute name="revision" type="xsd:string"/>
+            <xsd:attribute name="shortdesc" type="xsd:string"/>
+            <xsd:attribute name="designtype" type="xsd:string" />
+            <xsd:attribute name="projectid" type="xsd:string"/>
+            <xsd:attribute name="projectname" type="xsd:string" />
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="harnessdesign">
+     <xsd:complexType>
+            <xsd:annotation>
+                <xsd:documentation>
+                    Root element type definition for the exchange of harness design data.
+                    It can contain a plane (used for the 3D flattening), a physical harness description and the electrical harness description.
+                </xsd:documentation>
+            </xsd:annotation>
+            <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                    <xsd:element name="source" type="SourceFileType" minOccurs="0"/>
+                    <xsd:element name="optionset" type="BaseOptionSetType" minOccurs="0"/>
+                    <xsd:element name="modulecodeset" minOccurs="0">
+                        <xsd:complexType>
+                            <xsd:complexContent>
+                                <xsd:extension base="BaseModuleCodeSetType">
+                                    <xsd:attribute name="functionalmodulecodelevel" use="optional">
+                                        <xsd:simpleType>
+                                            <xsd:restriction base="xsd:NMTOKEN">
+                                                <xsd:enumeration value="design"/>
+                                                <xsd:enumeration value="project"/>
+                                            </xsd:restriction>
+                                        </xsd:simpleType>
+                                    </xsd:attribute>
+                                    <xsd:attribute name="productionmodulecodelevel" use="optional">
+                                        <xsd:simpleType>
+                                            <xsd:restriction base="xsd:NMTOKEN">
+                                                <xsd:enumeration value="design"/>
+                                                <xsd:enumeration value="project"/>
+                                            </xsd:restriction>
+                                        </xsd:simpleType>
+                                    </xsd:attribute>
+                                </xsd:extension>
+                            </xsd:complexContent>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="productionmodulecodehierarchy" minOccurs="0" maxOccurs="1">
+                        <xsd:complexType>
+                            <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+                                <xsd:element name="modulecodehierarchy" minOccurs="0">
+                                    <xsd:complexType>
+                                        <xsd:attribute name="childref" type="xsd:string" use="required"/>
+                                        <xsd:attribute name="parentref" type="xsd:string" use="required"/>
+                                    </xsd:complexType>
+                                </xsd:element>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="plane" minOccurs="0">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                The plane is exported from the MCAD tool and is used by Capital when running the 3D flattening operation.
+                                When coming from the Capital plugin for CATIA V5, the plane can be specified using a face in the model, the view port, or manually entered.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                        <xsd:complexType>
+                            <xsd:complexContent>
+                                <xsd:extension base="PlaneType"/>
+                            </xsd:complexContent>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
+                <xsd:sequence>
+                    <xsd:element name="harness" type="HarnessDataType" minOccurs="0">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                The harness data type contains the physical description of the harness, ie bundles, nodes, protections and supports.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="wiringconnectivity" type="WiringDesignType" minOccurs="0">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                The wiring connectivity describes all of the electrical items in the harness, ie connectors, wires, multicores, etc.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="constraintsholder" type="ConstraintsElementType" minOccurs="0">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                The element will be the container for all the constraints which need to be adhered
+                                to when processing the harness design during brige operations.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:choice>
+            <xsd:attribute name="author" type="xsd:string" use="optional"/>
+            <xsd:attributeGroup ref="RootElementCommonAttributes"/>
+            <xsd:attribute name="state" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation>The state is not used.</xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:attributeGroup name="SourceAttributeGroup">
+        <xsd:attribute name="location" type="xsd:string"/>
+        <xsd:attribute name="adaptorformat" type="xsd:string"/>
+    </xsd:attributeGroup>
+    <xsd:complexType name="SourceFileType">
+        <xsd:attributeGroup ref="SourceAttributeGroup"/>
+    </xsd:complexType>
+    <!--                                                                             -->
+    <!--          Definition of common attributes reused throughout                  -->
+    <!--          harnessdesign elements.                                            -->
+    <!--                                                                             -->
+    <xsd:simpleType name="BundleEndTypeAttribute">
+        <xsd:restriction base="xsd:NMTOKEN">
+            <xsd:enumeration value="start"/>
+            <xsd:enumeration value="end"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="SegmentTypeAttribute">
+        <xsd:restriction base="xsd:NMTOKEN">
+            <xsd:enumeration value="straight"/>
+            <xsd:enumeration value="bend"/>
+            <xsd:enumeration value="dogleg"/>
+            <xsd:enumeration value="arc"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="ClipType">
+        <xsd:restriction base="xsd:NMTOKEN">
+            <xsd:enumeration value="cabletie"/>
+            <xsd:enumeration value="taped"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="ClipMountingType">
+        <xsd:restriction base="xsd:NMTOKEN">
+            <xsd:enumeration value="edge"/>
+            <xsd:enumeration value="hole"/>
+            <xsd:enumeration value="stud"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="TerminationMethodType">
+        <xsd:restriction base="xsd:NMTOKEN">
+            <xsd:enumeration value="systemcalculated"/>
+            <xsd:enumeration value="cutandterminate"/>
+            <xsd:enumeration value="terminateseparately"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:attributeGroup name="DesignAttributeContainerType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Contains Design attributes
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:attributeGroup ref="HarnessPartAttributes"/>
+        <xsd:attribute name="id" type="xsd:ID" use="required"/>
+        <xsd:attribute name="description" type="xsd:string"/>
+        <xsd:attribute name="shortdesc" type="xsd:string"/>
+        <xsd:attribute name="revision" type="xsd:string"/>
+        <xsd:attribute name="customerName" type="xsd:string"/>
+        <xsd:attribute name="customerRevision" type="xsd:string"/>
+        <xsd:attribute name="creationDate" type="xsd:string"/>
+        <xsd:attribute name="customerCreationDate" type="xsd:string"/>
+        <xsd:attribute name="manufacturingSite" type="xsd:string"/>
+        <xsd:attribute name="userField1" type="xsd:string"/>
+        <xsd:attribute name="userField2" type="xsd:string"/>
+        <xsd:attribute name="userField3" type="xsd:string"/>
+        <xsd:attribute name="userField4" type="xsd:string"/>
+        <xsd:attribute name="userField5" type="xsd:string"/>
+        <xsd:attribute name="datum" default="front">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN">
+                    <xsd:enumeration value="front"/>
+                    <xsd:enumeration value="back"/>
+                    <xsd:enumeration value="terminal"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="datumNode" type="xsd:string"/>
+        <xsd:attribute name="datumRoute" type="xsd:string"/>
+        <xsd:attribute name="group" type="xsd:string"/>
+        <xsd:attribute name="sealedConnectors" type="xsd:boolean"/>
+        <xsd:attribute name="pluggedConnectors" type="xsd:boolean"/>
+        <xsd:attribute name="insulatedSplices" type="xsd:boolean"/>
+        <xsd:attribute name="releaseLevel">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN">
+                    <xsd:enumeration value="Draft"/>
+                    <xsd:enumeration value="Pending"/>
+                    <xsd:enumeration value="Released"/>
+                    <xsd:enumeration value="Obsolete"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="releaseLevelName" type="xsd:string"/>
+        <xsd:attribute name="libraryScoped" type="xsd:boolean"/>
+        <xsd:attribute name="libScopedByType" default="none">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN">
+                    <xsd:enumeration value="none"/>
+                    <xsd:enumeration value="cust_or_site"/>
+                    <xsd:enumeration value="cust_and_site"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="objecttag" type="xsd:string"/>
+        <xsd:attribute name="tubeaddontype" default="None">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN">
+                    <xsd:enumeration value="Percentage"/>
+                    <xsd:enumeration value="Fixed"/>
+                    <xsd:enumeration value="None"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="tubeaddonfactor" type="xsd:string"/>
+        <xsd:attribute name="manualterminal" type="xsd:boolean"/>
+        <xsd:attribute name="usepitchtables" type="xsd:boolean" use="optional"/>
+
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="AlignmentGroup">
+        <xsd:attribute name="alignment">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN">
+                    <xsd:enumeration value="center"/>
+                    <xsd:enumeration value="left"/>
+                    <xsd:enumeration value="right"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+    </xsd:attributeGroup>
+    <!--                                                                             -->
+    <!--          Start of complexType definitions for harnessdesign                 -->
+    <!--                                                                             -->
+    <xsd:complexType name="BaseCavityComponentType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Can be a plug, seal or a contact.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="refedmodule" type="BaseReferredModuleType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="property" type="BasePropertyType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:choice>
+        <xsd:attributeGroup ref="HarnessPartAttributes"/>
+        <xsd:attribute name="id" type="xsd:ID"/>
+        <xsd:attribute name="materialcode" type="xsd:string"/>
+        <xsd:attribute name="optionexpression" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:complexType name="CavityComponentType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Can be a seal or a contact.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="BaseCavityComponentType">
+                <xsd:attribute name="derivativeref" type="xsd:IDREF">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            This is deprecated. See "wirecombination" element in "CavityDetailType"
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="WireCombinationType">
+        <xsd:annotation>
+            <xsd:documentation>
+                A construct to refer to the wire combinations for a cavity detail
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:attribute name="wireref" type="xsd:IDREF"/>
+    </xsd:complexType>
+    <xsd:complexType name="CavityDetailType">
+        <xsd:annotation>
+            <xsd:documentation>
+                A construct to hold the details of terminal, seal, plug and other related requirements for a particular cavity (and wire combination)
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="wirecombination" type="WireCombinationType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:choice>
+        <xsd:attribute name="id" type="xsd:ID"/>
+        <xsd:attribute name="selectcontact" type="xsd:boolean"/>
+        <xsd:attribute name="selectseal" type="xsd:boolean"/>
+        <xsd:attribute name="contactref" type="xsd:IDREF"/>
+        <xsd:attribute name="sealref" type="xsd:IDREF"/>
+    </xsd:complexType>
+    <xsd:complexType name="AdditionalComponentType">
+        <xsd:annotation>
+            <xsd:documentation>
+                An additional component belonging to a connector.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:group ref="PropertyGroup"/>
+        </xsd:choice>
+        <xsd:attributeGroup ref="HarnessPartAttributes"/>
+        <xsd:attribute name="id" type="xsd:ID" use="optional"/>
+        <xsd:attribute name="type" type="xsd:string" use="optional"/>
+        <xsd:attribute name="position" type="xsd:string"/>
+        <xsd:attribute name="optionexpression" type="xsd:string"/>
+        <xsd:attribute name="quantity" type="xsd:double"/>
+    </xsd:complexType>
+    <xsd:complexType name="VariantElementType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Variant position element
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:attribute name="variantRef" type="xsd:IDREF" use="required"/>
+    </xsd:complexType>
+    <xsd:complexType name="CavityType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Represents both pins and cavities and is hence used in both connectors and devices
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="BasePinType">
+                <xsd:group ref="CommonElementsGroup"/>
+                <xsd:attributeGroup ref="ConnectivityCommonAttributes"/>
+                <xsd:attribute name="cavity" type="xsd:boolean">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            This is deprecated (This flag denotes whether the object is a pin or cavity).
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="ConnectorRouteType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Routes defined on a connector.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="bundle" type="xsd:IDREF"/>
+        <xsd:attribute name="pokehome" type="xsd:boolean"/>
+        <xsd:attribute name="node" type="xsd:IDREF"/>
+    </xsd:complexType>
+    <xsd:complexType name="ShellType">
+        <xsd:annotation>
+            <xsd:documentation>
+                These are used to model modular connectors which have a shell which houses the connector modules. A shell can have a backshell of its own.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="ConnectorType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="CavityPinType">
+        <xsd:complexContent>
+            <xsd:extension base="ConnectorPinType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="ConnectorPinType">
+        <xsd:complexContent>
+            <xsd:extension base="CavityType">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        A connector pin may have a seal, a plug, a contact or neither.
+                    </xsd:documentation>
+                </xsd:annotation>
+                <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                    <xsd:element name="seal" type="CavityComponentType" minOccurs="0" maxOccurs="unbounded"/>
+                    <xsd:element name="contact" type="CavityComponentType" minOccurs="0" maxOccurs="unbounded"/>
+                    <xsd:element name="addpart" type="AdditionalComponentType" minOccurs="0" maxOccurs="unbounded"/>
+                    <xsd:element name="cavitydetail" type="CavityDetailType" minOccurs="0" maxOccurs="unbounded"/>
+                    <xsd:element name="plug" type="BaseCavityComponentType" minOccurs="0" maxOccurs="1"/>
+                </xsd:choice>
+<!--                <xsd:attribute name="autoselectcontact" type="xsd:boolean">-->
+<!--                    <xsd:annotation>-->
+<!--                        <xsd:documentation>-->
+<!--                            This is deprecated. See "selectcontact" attribute in "CavityDetailType"-->
+<!--                        </xsd:documentation>-->
+<!--                    </xsd:annotation>-->
+<!--                </xsd:attribute>-->
+<!--                <xsd:attribute name="autoselectseal" type="xsd:boolean">-->
+<!--                    <xsd:annotation>-->
+<!--                        <xsd:documentation>-->
+<!--                            This is deprecated. See "selectseal" attribute in "CavityDetailType"-->
+<!--                        </xsd:documentation>-->
+<!--                    </xsd:annotation>-->
+<!--                </xsd:attribute>-->
+<!--                <xsd:attribute name="autoselectplug" type="xsd:boolean">-->
+<!--                    <xsd:annotation>-->
+<!--                        <xsd:documentation>-->
+<!--                            This is deprecated. See "selectplug" attribute-->
+<!--                        </xsd:documentation>-->
+<!--                    </xsd:annotation>-->
+<!--                </xsd:attribute>-->
+                <xsd:attribute name="selectplug" type="xsd:boolean"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="ConnectorType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Connectors have pins, backshells and other additional components.  If they are part of a modular assembly they will have a relationship to their containing shell.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="BaseConnectorType">
+                <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                    <xsd:element name="backshell" type="BackshellType"/>
+                    <xsd:element name="pin" type="CavityPinType"/>
+                    <xsd:element name="variantElement" type="VariantElementType"/>
+                    <xsd:element name="addpart" type="AdditionalComponentType"/>
+                    <xsd:element name="node" type="NodeType"/>
+                    <xsd:element name="route" type="ConnectorRouteType"/>
+                    <xsd:group ref="CommonElementsGroup"/>
+                    <xsd:element name="KeywayDir" type="Cartesian3DCoordinate" minOccurs="0"/>
+                    <xsd:element name="PlanarKeywayDir" type="CartesianPointType" minOccurs="0"/>
+                </xsd:choice>
+                <xsd:attributeGroup ref="ConnectivityCommonAttributes"/>
+                <xsd:attributeGroup ref="ArchitecturalAttributes"/>
+                <xsd:attributeGroup ref="SupplierPartAttributes"/>
+                <xsd:attributeGroup ref="ConnectorCommonAttributes"/>
+                <xsd:attribute name="nodeid" type="xsd:IDREF"/>
+                <xsd:attribute name="displayName" type="xsd:string">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            The display name comes from the name used in the MCAD tool for the connector on the model display. This is frequently synonomous with the instance name.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+                <xsd:attribute name="refined" type="xsd:boolean">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            Whether this is a refined connector (in the exported design) or not.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+                <xsd:attribute name="terminalmaterial" type="xsd:string">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            The terminal material on a connector.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+                <xsd:attribute name="materialcode" type="xsd:string">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            The material code of a connector.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+                <xsd:attribute name="sealed" type="xsd:boolean"/>
+                <xsd:attribute name="plugged" type="xsd:boolean"/>
+                <xsd:attribute name="greased" type="xsd:boolean"/>
+                <xsd:attribute name="idc" type="xsd:boolean"/>
+                <xsd:attribute name="assembly" type="xsd:boolean"/>
+                <xsd:attribute name="incBom" type="xsd:boolean"/>
+                <xsd:attribute name="datum" default="front">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            The connector datum value indicates where the wires terminate within the connector.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                    <xsd:simpleType>
+                        <xsd:restriction base="xsd:NMTOKEN">
+                            <xsd:enumeration value="front"/>
+                            <xsd:enumeration value="back"/>
+                            <xsd:enumeration value="terminal"/>
+                            <xsd:enumeration value="default"/>
+                        </xsd:restriction>
+                    </xsd:simpleType>
+                </xsd:attribute>
+                <xsd:attribute name="backshellplugged" type="xsd:boolean"/>
+                <xsd:attribute name="backshellsealed" type="xsd:boolean"/>
+                <xsd:attribute name="backshellOrient" type="xsd:string"/>
+                <xsd:attribute name="keywayangle" type="xsd:string"/>
+                <xsd:attribute name="elevatedkeywayangle" type="xsd:string"/>
+                <xsd:attribute name="position" type="xsd:string"/>
+                <xsd:attribute name="color" type="xsd:string"/>
+                <xsd:attribute name="librarytypecode" type="xsd:string"/>
+                <xsd:attribute name="mate" type="xsd:string"/>
+                <xsd:attribute name="matedharness" type="xsd:string"/>
+                <xsd:attribute name="slotname" type="xsd:string"/>
+                <xsd:attributeGroup ref="IECNamingAttributes"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="MLCWireEndType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Wire End MLC type with reference to wire and the connected cavity
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:attribute name="wire" type="xsd:IDREF"/>
+        <xsd:attribute name="pin" type="xsd:IDREF"/>
+    </xsd:complexType>
+    <xsd:complexType name="MLCLocationType">
+        <xsd:annotation>
+            <xsd:documentation>
+                MLCs have multiple locations. Location attributes depend upon the type of MLC
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:choice minOccurs="0">
+            <xsd:element name="nodelocation" type="BundleLocationType"/>
+            <xsd:element name="wireend" type="MLCWireEndType"/>
+        </xsd:choice>
+        <xsd:attribute name="pin" type="xsd:IDREF"/>
+    </xsd:complexType>
+    <xsd:complexType name="BaseMLCType">
+        <xsd:annotation>
+            <xsd:documentation>
+                MLCs have multiple locations.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:attribute name="id" type="xsd:string" use="required"/>
+        <xsd:attribute name="elecid" type="xsd:string"/>
+        <xsd:attribute name="quantity" type="xsd:double"/>
+        <xsd:attribute name="type" default="node">
+            <xsd:annotation>
+                <xsd:documentation>
+                    MLCs can be node MLCs or cavity MLCs or wire end MLCs.
+                </xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN">
+                    <xsd:enumeration value="node"/>
+                    <xsd:enumeration value="cavity"/>
+                    <xsd:enumeration value="wireend"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attributeGroup ref="HarnessPartAttributes"/>
+        <xsd:attribute name="optionexpression" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:complexType name="MLCType">
+        <xsd:annotation>
+            <xsd:documentation>
+                MLCs have multiple locations. They have additional components and properties.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="BaseMLCType">
+                <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                    <xsd:element name="location" type="MLCLocationType"/>
+                    <xsd:element name="addpart" type="AdditionalComponentType"/>
+                    <xsd:group ref="PropertyGroup"/>
+                </xsd:choice>
+                <xsd:attribute name="materialcode" type="xsd:string"/>
+                <xsd:attribute name="color" type="xsd:string"/>
+                <xsd:attribute name="layerNumber" type="xsd:integer"/>
+                <xsd:attributeGroup ref="OriginAttributeGroup"/>
+                <xsd:attributeGroup ref="AlignmentGroup"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="CriticalDimensionElementType">
+        <xsd:annotation>
+            <xsd:documentation>Type representing the critical dimensions which are dimensions that are part of the harness design content</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="property" type="BasePropertyType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="startLocation" type="BundleLocationType" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="endLocation" type="BundleLocationType" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="route" type="ThroughBundleType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="routenode" type="ThroughNodeType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:ID" use="required"/>
+        <xsd:attribute name="type" type="CriticalDimensionType" default="standard"/>
+        <xsd:attribute name="toleranceMax" type="xsd:string" use="optional"/>
+        <xsd:attribute name="toleranceMin" type="xsd:string" use="optional"/>
+        <xsd:attribute name="dimensionLength" type="xsd:double" use="required"/>
+        <xsd:attribute name="displayName" type="xsd:string"/>
+        <xsd:attribute name="name" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:simpleType name="CriticalDimensionType">
+        <xsd:restriction base="xsd:NMTOKEN">
+            <xsd:enumeration value="standard"/>
+            <xsd:enumeration value="reference"/>
+            <xsd:enumeration value="external"/>
+            <xsd:enumeration value="xaxial"/>
+            <xsd:enumeration value="yaxial"/>
+            <xsd:enumeration value="xyaxial"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:complexType name="DeviceType">
+        <xsd:complexContent>
+            <xsd:extension base="BaseDeviceType">
+                <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                    <xsd:element name="pin" type="CavityPinType"/>
+                    <xsd:group ref="CommonElementsGroup"/>
+                    <xsd:element name="addpart" type="AdditionalComponentType" minOccurs="0" maxOccurs="unbounded"/>
+                    <xsd:element name="Location" type="BundleLocationType" minOccurs="0"/>
+                </xsd:choice>
+                <xsd:attributeGroup ref="ConnectivityCommonAttributes"/>
+                <xsd:attributeGroup ref="SupplierPartAttributes"/>
+                <xsd:attributeGroup ref="ArchitecturalAttributes"/>
+                <xsd:attribute name="displayName" type="xsd:string"/>
+                <xsd:attribute name="nodeid" type="xsd:IDREF"/>
+                <xsd:attribute name="route" type="xsd:string"/>
+                <xsd:attribute name="incBom" type="xsd:boolean"/>
+                <xsd:attribute name="color" type="xsd:string"/>
+                <xsd:attribute name="librarytypecode" type="xsd:string"/>
+                <xsd:attribute name="materialcode" type="xsd:string"/>
+                <xsd:attribute name="plugged" type="xsd:boolean"/>
+                <xsd:attribute name="terminalmaterial" type="xsd:string">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            The terminal material on a device.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+                <xsd:attribute name="datum" default="front">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            The device datum value indicates where the wires terminate within the device.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                    <xsd:simpleType>
+                        <xsd:restriction base="xsd:NMTOKEN">
+                            <xsd:enumeration value="front"/>
+                            <xsd:enumeration value="back"/>
+                            <xsd:enumeration value="terminal"/>
+                            <xsd:enumeration value="default"/>
+                        </xsd:restriction>
+                    </xsd:simpleType>
+                </xsd:attribute>
+                <xsd:attribute name="greased" type="xsd:boolean"/>
+                <xsd:attribute name="sealed" type="xsd:boolean"/>
+                <xsd:attributeGroup ref="IECNamingAttributes"/>
+                <xsd:attributeGroup ref="OriginAttributeGroup"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="HarnessMulticoreEndType">
+        <xsd:annotation>
+            <xsd:documentation>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="addpart" type="AdditionalComponentType"/>
+        </xsd:choice>
+        <xsd:attributeGroup ref="MulticoreCutBackAttributes"/>
+        <xsd:attribute name="name" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:complexType name="MulticoreType">
+        <xsd:annotation>
+            <xsd:documentation>
+                A multicore owns its members.
+                Each member refers to a nested multicore or a conductor which must belong to the document and must not belong to another multicore.
+                The multicore route is determined as the intersection of all its members routes.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="member" type="MemberType"/>
+            <xsd:element name="overbraidpin" type="OverbraidPinType" minOccurs="0"/>
+            <xsd:element name="multicoreend" type="HarnessMulticoreEndType"/>
+            <xsd:element name="multicoremarker" type="MulticoreMarkerType"/>
+            <xsd:group ref="CommonElementsGroup"/>
+        </xsd:choice>
+        <xsd:attribute name="type" type="MulticoreTypeAttribute" default="oval"/>
+        <xsd:attributeGroup ref="MulticoreAttributes"/>
+        <xsd:attributeGroup ref="LengthChangeAttributes"/>
+        <xsd:attributeGroup ref="BaseConnectivityCommonAttributes"/>
+        <xsd:attributeGroup ref="ConnectivityCommonAttributes"/>
+        <xsd:attributeGroup ref="ArchitecturalAttributes"/>
+        <xsd:attributeGroup ref="SupplierPartAttributes"/>
+        <xsd:attribute name="displayName" type="xsd:string"/>
+        <xsd:attribute name="module" type="xsd:string"/>
+        <xsd:attributeGroup ref="CutBackAttributes"/>
+        <xsd:attributeGroup ref="OriginAttributeGroup"/>
+        <xsd:attribute name="inHouse" type="xsd:boolean"/>
+        <!-- id name optionexpression design -->
+        <!-- harness part number and state -->
+    </xsd:complexType>
+    <xsd:complexType name="HarnessAssemblyType">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="assemblymember" type="AssemblyMemberType"/>
+            <xsd:group ref="CommonElementsGroup"/>
+        </xsd:choice>
+        <xsd:attributeGroup ref="BaseConnectivityCommonAttributes"/>
+        <xsd:attributeGroup ref="ConnectivityCommonAttributes"/>
+        <xsd:attributeGroup ref="SupplierPartAttributes"/>
+        <xsd:attributeGroup ref="ArchitecturalAttributes"/>
+        <xsd:attribute name="assemblyType" type="AssemblyTypeAttribute" default="StandardAssembly"/>
+        <xsd:attribute name="displayName" type="xsd:string"/>
+        <xsd:attribute name="incBom" type="xsd:boolean"/>
+        <xsd:attributeGroup ref="OriginAttributeGroup"/>
+        <xsd:attribute name="isVariant" type="xsd:boolean"/>
+    </xsd:complexType>
+    <xsd:complexType name="HarnessDataType">
+        <xsd:annotation>
+            <xsd:documentation>
+                HarnessDataType is the main element for containing the description of the physical harness.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                <xsd:group ref="PropertyGroup"/>
+                <xsd:element name="scopeset" type="BaseScopeSetType" minOccurs="0"/>
+                <xsd:element name="bundle" type="BundleType"/>
+                <xsd:element name="node" type="NodeType"/>
+                <xsd:element name="fixing" type="FixingType"/>
+                <xsd:element name="insulationRun" type="InsulationRunType"/>
+                <xsd:element name="protection" type="ProtectionType"/>
+                <xsd:element name="region" type="BundleRegionType"/>
+                <xsd:element name="derivative" type="DerivativeType"/>
+                <xsd:element name="module" type="ModuleType"/>
+                <xsd:element name="otherpart" type="OtherComponentType"/>
+                <xsd:element name="mlc" type="MLCType"/>
+                <xsd:element name="criticaldimension" type="CriticalDimensionElementType" minOccurs="0"/>
+            </xsd:choice>
+        </xsd:sequence>
+        <xsd:attributeGroup ref="DesignAttributeContainerType"/>
+        <xsd:attribute name="state" type="xsd:string"/>
+        <xsd:attribute name="contexttag" type="xsd:string"/>
+        <xsd:attribute name="harnessgrouptag" type="xsd:string"/>
+        <xsd:attribute name="preferredflattener" type="PrefferedFlattenerType" default="none"/>
+    </xsd:complexType>
+    <xsd:complexType name="DerivativeType">
+        <xsd:annotation>
+            <xsd:documentation>Represents a derivative of a composite harness.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                <xsd:group ref="PropertyGroup"/>
+                <xsd:element name="scopeset" type="BaseScopeSetType" minOccurs="0"/>
+                <xsd:element name="optionref" type="BaseOptionRefType"/>
+            </xsd:choice>
+        </xsd:sequence>
+        <xsd:attributeGroup ref="DesignAttributeContainerType"/>
+    </xsd:complexType>
+    <xsd:complexType name="ModuleType">
+        <xsd:annotation>
+            <xsd:documentation>Represents a module of a composite harness.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                <xsd:group ref="PropertyGroup"/>
+                <xsd:element name="moduleref" type="BaseModuleCodeRefType"/>
+            </xsd:choice>
+        </xsd:sequence>
+        <xsd:attributeGroup ref="DesignAttributeContainerType"/>
+    </xsd:complexType>
+    <xsd:complexType name="SpliceType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Element to model splices. Splices may have multiple pins.
+                Splices can be located at an offset from the end of a bundle using a bundle position child element.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="BaseSpliceType">
+                <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                    <xsd:element name="pin" type="CavityType" minOccurs="0"/>
+                    <xsd:element name="variantElement" type="VariantElementType" minOccurs="0"/>
+                    <xsd:element name="addpart" type="AdditionalComponentType" minOccurs="0" maxOccurs="unbounded"/>
+                    <xsd:element name="Location" type="BundleLocationType" minOccurs="0"/>
+                    <xsd:group ref="CommonElementsGroup" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:choice>
+                <xsd:attributeGroup ref="ConnectivityCommonAttributes"/>
+                <xsd:attributeGroup ref="ArchitecturalAttributes"/>
+                <xsd:attributeGroup ref="SupplierPartAttributes"/>
+                <xsd:attributeGroup ref="OriginAttributeGroup"/>
+                <xsd:attribute name="displayName" type="xsd:string"/>
+                <xsd:attribute name="type" default="splice">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            Splices can be ultrasonic welds, solder sleeves or regular crimped splices.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                    <xsd:simpleType>
+                        <xsd:restriction base="xsd:NMTOKEN">
+                            <xsd:enumeration value="splice"/>
+                            <xsd:enumeration value="solslv"/>
+                            <xsd:enumeration value="uweld"/>
+                        </xsd:restriction>
+                    </xsd:simpleType>
+                </xsd:attribute>
+                <xsd:attribute name="incBom" type="xsd:boolean"/>
+                <xsd:attribute name="signal" type="xsd:string"/>
+                <xsd:attribute name="color" type="xsd:string"/>
+                <xsd:attribute name="materialcode" type="xsd:string"/>
+                <xsd:attribute name="librarytypecode" type="xsd:string"/>
+                <xsd:attribute name="insulationtype" default="HeatShrinkSleeve">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            Splices can either have Heat Shrink Sleeve or Spot Tape as Insulations or None of them.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                    <xsd:simpleType>
+                        <xsd:restriction base="xsd:NMTOKEN">
+                            <xsd:enumeration value="HeatShrinkSleeve"/>
+                            <xsd:enumeration value="SpotTape"/>
+                            <xsd:enumeration value="None"/>
+                        </xsd:restriction>
+                    </xsd:simpleType>
+                </xsd:attribute>
+                <xsd:attribute name="repositionable" type="xsd:boolean"/>
+                <xsd:attribute name="balanceable" type="xsd:boolean" default="true"/>
+                <xsd:attribute name="sealed" type="xsd:boolean"/>
+                <xsd:attributeGroup ref="IECNamingAttributes"/>
+                <xsd:attribute name="striplength" type="xsd:double"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:element name="Fault">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="faultcode" type="xsd:string" />
+                <xsd:element name="faultstring" type="xsd:string" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:complexType name="WiringDesignType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Main element to model the electrical components in the harness.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="device" type="DeviceType"/>
+            <xsd:element name="splice" type="SpliceType"/>
+            <xsd:element name="connector" type="ConnectorType"/>
+            <xsd:element name="net" type="NetType"/>
+            <xsd:element name="wire" type="HarnessWireType"/>
+            <xsd:element name="multicore" type="MulticoreType"/>
+            <xsd:element name="shieldconductor" type="HarnessShieldType"/>
+            <xsd:element name="shell" type="ShellType"/>
+            <xsd:element name="assembly" type="HarnessAssemblyType"/>
+        </xsd:choice>
+        <xsd:attribute name="id" type="xsd:string"/>
+        <xsd:attribute name="name" type="xsd:string"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="MulticoreMarkerType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Multicore markers indicate the marker texts on multicore ends / middle / spaced intervals.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="WireMarkerType">
+                <xsd:attribute name="end" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="WireMarkerType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Wire markers indicate the marker texts on wire ends / middle / spaced intervals.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:attribute name="type" default="middle">
+            <xsd:annotation>
+                <xsd:documentation>
+                    Markers can be either on ends or in the middle or spaced.
+                </xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN">
+                    <xsd:enumeration value="end"/>
+                    <xsd:enumeration value="middle"/>
+                    <xsd:enumeration value="spaced"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="pin" type="xsd:IDREF"/>
+        <xsd:attribute name="color" type="xsd:string"/>
+        <xsd:attribute name="spacing" type="xsd:string"/>
+        <xsd:attribute name="text" type="xsd:string"/>
+        <xsd:attribute name="active" type="xsd:boolean" default="true"/>
+    </xsd:complexType>
+    <xsd:complexType name="HarnessWireEndType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Wire end extends the electrical connection to add physical information.
+                It also allows to specify the wire is not connected at this end.
+                An unconnected wire end must have a node or bundle position identifier
+                as value of its pinref attribute. If the location is specified by a
+                bundle position, it must be added as a child element of the wire end.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="BaseWireConnectionType">
+                <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                    <xsd:element name="unconnectedlocation" type="BundleLocationType"/>
+                    <xsd:element name="addpart" type="AdditionalComponentType"/>
+                </xsd:choice>
+                <xsd:attribute name="terminaltypecode" type="xsd:string"/>
+                <xsd:attribute name="unconnected" type="xsd:boolean" default="false"/>
+                <xsd:attribute name="route" type="xsd:string"/>
+                <xsd:attribute name="loopAmount" type="xsd:double"/>
+                <xsd:attribute name="striplength" type="xsd:double"/>
+                <xsd:attribute name="terminationmethod" type="TerminationMethodType" default="systemcalculated"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="HarnessWireType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Wires have connections to pins. They may also have a centre-strip splice.
+                They may also have routes to describe which bundles they travel through.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="connection" type="HarnessWireEndType"/>
+            <xsd:element name="centerstripsplice" type="CenterStripSpliceType"/>
+            <xsd:choice>
+                <xsd:element name="route" type="ThroughBundleType"/>
+                <xsd:element name="routenode" type="ThroughNodeType"/>
+            </xsd:choice>
+            <xsd:element name="wiremarker" type="WireMarkerType"/>
+            <xsd:group ref="CommonElementsGroup"/>
+        </xsd:choice>
+        <xsd:attributeGroup ref="BaseConnectivityCommonAttributes"/>
+        <xsd:attributeGroup ref="WireAttributesGroup"/>
+        <xsd:attributeGroup ref="LengthChangeAttributes"/>
+        <xsd:attributeGroup ref="ConnectivityCommonAttributes"/>
+        <xsd:attributeGroup ref="ArchitecturalAttributes"/>
+        <xsd:attributeGroup ref="SupplierPartAttributes"/>
+        <xsd:attribute name="displayName" type="xsd:string"/>
+        <xsd:attribute name="module" type="xsd:string"/>
+        <xsd:attribute name="librarytypecode" type="xsd:string"/>
+        <xsd:attribute name="variantposition" type="xsd:boolean"/>
+        <xsd:attribute name="routedbyconstraint" type="xsd:boolean"/>
+    </xsd:complexType>
+    <xsd:complexType name="CenterStripSpliceType">
+        <xsd:attribute name="spliceref" type="xsd:IDREF" use="required"/>
+        <xsd:attribute name="striplength" type="xsd:double"/>
+        <xsd:attribute name="throughorder" type="xsd:integer"/>
+        <xsd:attributeGroup ref="LengthChangeAttributes"/>
+    </xsd:complexType>
+    <xsd:complexType name="HarnessShieldType">
+        <xsd:complexContent>
+            <xsd:extension base="ShieldType">
+                <xsd:attribute name="displayName" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="BundleJunctionInfoType">
+        <xsd:attribute name="atStart" type="xsd:integer"/>
+        <xsd:attribute name="atEnd" type="xsd:integer"/>
+    </xsd:complexType>
+    <xsd:complexType name="BundleType">
+        <xsd:sequence>
+            <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                <xsd:group ref="PropertyGroup"/>
+                <xsd:element name="segments" type="SegmentsType"/>
+                <xsd:element name="marker" type="BundleLocationType"/>
+            </xsd:choice>
+            <xsd:element name="bundlejunctioninfo" type="BundleJunctionInfoType" minOccurs="0" maxOccurs="1"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:ID" use="required"/>
+        <xsd:attribute name="elecid" type="xsd:string"/>
+        <xsd:attribute name="bendRadius" type="xsd:double"/>
+        <xsd:attribute name="bendRadiusRatio" type="xsd:double"/>
+        <xsd:attribute name="bundleDiameter" type="xsd:double"/>
+        <xsd:attribute name="widthWithInsulations" type="xsd:double"/>
+        <xsd:attribute name="endNode" type="xsd:IDREF" use="required"/>
+        <xsd:attribute name="length" type="xsd:double" use="required"/>
+        <xsd:attribute name="minLength" type="xsd:double"/>
+        <xsd:attribute name="maxDiameter" type="xsd:double"/>
+        <xsd:attribute name="state" type="xsd:string"/>
+        <xsd:attribute name="displayName" type="xsd:string"/>
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
+        <xsd:attribute name="shortdescription" type="xsd:string"/>
+        <xsd:attribute name="section"/>
+        <xsd:attribute name="startNode" type="xsd:IDREF" use="required"/>
+        <xsd:attribute name="optionexpression" type="xsd:string"/>
+        <xsd:attributeGroup ref="OriginAttributeGroup"/>
+        <xsd:attribute name="collapseTo" use="optional">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN">
+                    <xsd:enumeration value="start"/>
+                    <xsd:enumeration value="end"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+
+
+    </xsd:complexType>
+    <xsd:complexType name="SegmentsType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Sub-segments of a bundle for use in unfolding flattening algorithms.
+                Contains segment and waypoint elements.
+                All segments are not necessarily modelled.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:choice maxOccurs="unbounded">
+            <xsd:element name="waypoint" type="WayPointType"/>
+            <xsd:element name="segment" type="BundleSegmentType"/>
+        </xsd:choice>
+    </xsd:complexType>
+    <xsd:complexType name="WayPointType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Represents the extremity of a sub-segment of a bundle.
+                As such, it can represent a node, in which case its identifier will be either "start" or "end" to determine the node of the parent bundle.
+                Otherwise, the identifier must be unique within the parent bundle and its alphanumerical lexical order indicates its order from start to end node of the parent bundle.
+                The direction is the tangent of the bundle curve at this point and must be oriented from start to end node - i.e. curve parameterization must be such that parameter
+                at start node is smaller than parameter at end node.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="Position" type="CartesianPointType" minOccurs="0"/>
+            <xsd:element name="PlanarPosition" type="CartesianPointType" minOccurs="0"/>
+            <xsd:element name="Direction" type="Cartesian3DCoordinate" minOccurs="0"/>
+            <xsd:element name="ElevatedPosition" type="Cartesian3DCoordinate" minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:string" use="required"/>
+    </xsd:complexType>
+    <xsd:complexType name="BundleSegmentType">
+        <xsd:attribute name="length" type="xsd:double" use="required"/>
+        <xsd:attribute name="type" type="SegmentTypeAttribute" use="required"/>
+        <xsd:attribute name="start" type="xsd:string" use="required"/>
+        <xsd:attribute name="end" type="xsd:string" use="required"/>
+        <xsd:attribute name="arcradius" type="xsd:double"/>
+    </xsd:complexType>
+    <xsd:complexType name="NodeType">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="Position" type="CartesianPointType"/>
+            <xsd:element name="PlanarPosition" type="CartesianPointType" minOccurs="0"/>
+<!--            <xsd:element name="refedmodule" type="BaseReferredModuleType" minOccurs="0" maxOccurs="unbounded"/>-->
+            <xsd:group ref="CommonElementsGroup"/>
+        </xsd:choice>
+        <xsd:attribute name="id" type="xsd:ID" use="required"/>
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
+        <xsd:attribute name="state" type="xsd:string"/>
+        <xsd:attribute name="displayName" type="xsd:string"/>
+        <xsd:attribute name="shortname" type="xsd:string"/>
+        <xsd:attribute name="shortdescription" type="xsd:string"/>
+        <xsd:attribute name="optionexpression" type="xsd:string"/>
+        <xsd:attribute name="type" default="end">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN">
+                    <xsd:enumeration value="through"/>
+                    <xsd:enumeration value="end"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="viewFromNode" type="xsd:IDREF" use="optional"/>
+        <xsd:attributeGroup ref="OriginAttributeGroup"/>
+    </xsd:complexType>
+    <xsd:complexType name="BundleLocationType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Defines a position on a bundle using an offset from a bundle start or end node.
+                An optional orientation can be associated (e.g. for fixings): a value of true indicates an orientation from start to end node.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:choice maxOccurs="unbounded">
+            <xsd:group ref="PropertyGroup"/>
+            <xsd:element name="bundleLocation" type="BundleOffsetPointType"/>
+            <xsd:element name="variantLocation" type="VariantOffsetPointType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="functionalvariantlocation" type="VariantOffsetPointType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="productionvariantlocation" type="VariantOffsetPointType" minOccurs="0" maxOccurs="unbounded"/>
+<!--            <xsd:element name="refedmodule" type="BaseReferredModuleType" minOccurs="0" maxOccurs="unbounded"/>-->
+        </xsd:choice>
+        <xsd:attribute name="id" type="xsd:ID"/>
+        <xsd:attribute name="name" type="xsd:string" use="optional"/>
+        <xsd:attribute name="displayName" type="xsd:string" use="optional"/>
+        <xsd:attribute name="bundleRef" type="xsd:IDREF"/>
+        <xsd:attribute name="orientasbundle" type="xsd:boolean" default="true"/>
+        <xsd:attribute name="shortname" type="xsd:string"/>
+        <xsd:attribute name="shortdescription" type="xsd:string"/>
+        <xsd:attribute name="optionexpression" type="xsd:string"/>
+        <xsd:attributeGroup ref="OriginAttributeGroup"/>
+    </xsd:complexType>
+    <xsd:complexType name="VariantOffsetPointType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Defines a variant position on a bundle using an anchor node and a dimension.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:choice>
+            <xsd:group ref="PropertyGroup"/>
+        </xsd:choice>
+        <xsd:attribute name="optionexpression" type="xsd:string" use="required"/>
+        <xsd:attribute name="anchorRef" type="xsd:IDREF" use="required"/>
+        <xsd:attribute name="dimension" type="xsd:double" use="required"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="BundleOffsetPointType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Defines a location along a bundle as a one-dimensional positive offset, from either the start or end node, towards the bundle center.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:attribute name="id" type="xsd:ID"/>
+        <xsd:attribute name="offsetparameter" type="xsd:double" default="0.0"/>
+        <xsd:attribute name="offsetnoderef" type="BundleEndTypeAttribute" use="required"/>
+        <xsd:attribute name="anchorRef" type="xsd:IDREF" use="optional"/>
+        <xsd:attribute name="viewFromNode" type="xsd:IDREF" use="optional"/>
+    </xsd:complexType>
+    <xsd:complexType name="ThroughBundleType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Specifies a bundle element of a route constraint.
+                The route is a collection of constraints which describes the path of a wire or a protection through the harness.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:attribute name="bundleid" type="xsd:IDREF"/>
+        <xsd:attribute name="through" type="xsd:boolean" default="true"/>
+        <xsd:attribute name="throughorder" type="xsd:integer" default="0"/>
+    </xsd:complexType>
+    <xsd:complexType name="ThroughNodeType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Specifies a node element of a route constraint.
+                The route is a collection of constraints which describes the path of a wire or a protection through the harness.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:attribute name="nodeid" type="xsd:IDREF"/>
+        <xsd:attribute name="through" type="xsd:boolean" default="true"/>
+        <xsd:attribute name="throughorder" type="xsd:integer" default="0"/>
+    </xsd:complexType>
+    <xsd:complexType name="FixingType">
+        <xsd:annotation>
+            <xsd:documentation>
+                A fixing can be specified at an optional number of locations.
+                This form is able to support multiple bundles simultaneously.
+                The location corresponds to the mid-point of the part.
+                The location can be further specified by the addition of the orientation attribute, useful for asymmetric parts.
+                Additionally, the length fixing attribute will determine the end points of the part on the bundle.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:group ref="PropertyGroup"/>
+            <xsd:element name="Location" type="BundleLocationType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="addpart" type="AdditionalComponentType"/>
+            <xsd:element name="rotation" type="Cartesian3DCoordinate" minOccurs="0"/>
+            <xsd:element name="alignment" type="Cartesian3DCoordinate" minOccurs="0"/>
+            <xsd:element name="position" type="Cartesian3DCoordinate" minOccurs="0"/>
+        </xsd:choice>
+        <xsd:attribute name="id" type="xsd:string" use="required"/>
+        <xsd:attribute name="elecid" type="xsd:string"/>
+        <xsd:attribute name="length" type="xsd:double"/>
+        <xsd:attribute name="fixingType" use="optional">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN">
+                    <xsd:enumeration value="clip"/>
+                    <xsd:enumeration value="grommet"/>
+                    <xsd:enumeration value="support"/>
+                    <xsd:enumeration value="other"/>
+                    <xsd:enumeration value="retainer"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="orientation" type="xsd:string"/>
+        <xsd:attributeGroup ref="HarnessPartAttributes"/>
+        <xsd:attribute name="optionexpression" type="xsd:string"/>
+        <xsd:attribute name="materialcode" type="xsd:string"/>
+        <xsd:attribute name="colorcode" type="xsd:string"/>
+        <xsd:attribute name="group" type="xsd:string"/>
+        <xsd:attribute name="viewFromNode" type="xsd:IDREF"/>
+        <xsd:attribute name="cliptype" type="ClipType" default="cabletie"/>
+        <xsd:attribute name="clipmount" type="ClipMountingType" default="stud"/>
+        <xsd:attribute name="offsetclip" type="xsd:boolean"/>
+        <xsd:attribute name="layerNumber" type="xsd:integer"/>
+        <xsd:attributeGroup ref="OriginAttributeGroup"/>
+    </xsd:complexType>
+    <xsd:complexType name="BundleRegionType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Regions are used to model particular areas of interest on a harness, eg a wet zone or hot zone.
+                It is also used as a basis to model protections.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:group ref="PropertyGroup"/>
+            <xsd:element name="startLocation" type="BundleLocationType"/>
+            <xsd:element name="endLocation" type="BundleLocationType"/>
+            <xsd:choice>
+                <xsd:element name="route" type="ThroughBundleType"/>
+                <xsd:element name="routenode" type="ThroughNodeType"/>
+            </xsd:choice>
+        </xsd:choice>
+        <xsd:attribute name="id" type="xsd:ID" use="required"/>
+        <xsd:attribute name="elecid" type="xsd:string"/>
+        <xsd:attributeGroup ref="CommonPartAttributes"/>
+    </xsd:complexType>
+    <xsd:complexType name="ProtectionType">
+        <xsd:complexContent>
+            <xsd:extension base="BundleRegionType">
+                <xsd:attribute name="color" type="xsd:string"/>
+                <xsd:attribute name="convolutedTube" type="xsd:boolean"/>
+                <xsd:attribute name="calculationmethod" type="xsd:string"/>
+                <xsd:attribute name="endNode" type="xsd:IDREF"/>
+                <xsd:attribute name="innerDiameter" type="xsd:double"/>
+                <xsd:attribute name="insulationCode" type="xsd:string"/>
+                <xsd:attribute name="insulationType" default="tape">
+                    <xsd:simpleType>
+                        <xsd:restriction base="xsd:NMTOKEN">
+                            <xsd:enumeration value="tape"/>
+                            <xsd:enumeration value="spottape"/>
+                            <xsd:enumeration value="tube"/>
+                            <xsd:enumeration value="component"/>
+                            <xsd:enumeration value="breakouttape"/>
+                        </xsd:restriction>
+                    </xsd:simpleType>
+                </xsd:attribute>
+                <xsd:attribute name="layerNumber" type="xsd:integer"/>
+                <xsd:attribute name="material" type="xsd:string"/>
+                <xsd:attribute name="numberTurns" type="xsd:integer"/>
+                <xsd:attribute name="overlap" type="xsd:double"/>
+                <xsd:attribute name="slitTube" type="xsd:boolean"/>
+                <xsd:attribute name="startNode" type="xsd:IDREF"/>
+                <xsd:attribute name="tapeAngle" type="xsd:double"/>
+                <xsd:attribute name="tapeWidth" type="xsd:double"/>
+                <xsd:attribute name="tapeLayersCount" type="xsd:double"/>
+                <xsd:attribute name="typeCode" type="xsd:string"/>
+                <xsd:attribute name="pieceCode" type="xsd:string"/>
+                <xsd:attribute name="wallThickness" type="xsd:double"/>
+                <xsd:attribute name="length" type="xsd:double"/>
+                <xsd:attribute name="unmodifiedLength" type="xsd:double"/>
+                <xsd:attribute name="tapeThickness" type="xsd:double"/>
+                <xsd:attribute name="tapeLength" type="xsd:double"/>
+                <xsd:attribute name="cutback" type="xsd:double"/>
+                <xsd:attributeGroup ref="SupplierPartAttributes"/>
+                <xsd:attributeGroup ref="OriginAttributeGroup"/>
+                <xsd:attribute name="insulationNote" type="xsd:string"/>
+                <xsd:attributeGroup ref="AlignmentGroup"/>
+                <xsd:attribute name="subType">
+                    <xsd:simpleType>
+                        <xsd:restriction base="xsd:NMTOKEN">
+                            <xsd:enumeration value="untaped"/>
+                            <xsd:enumeration value="overlaptape"/>
+                            <xsd:enumeration value="spiraltape"/>
+                            <xsd:enumeration value="spacetape"/>
+                            <xsd:enumeration value="fixedtube"/>
+                            <xsd:enumeration value="fixedcutbacktube"/>
+                            <xsd:enumeration value="fixedpullbacktube"/>
+                            <xsd:enumeration value="selectedtube"/>
+                            <xsd:enumeration value="selectedcutbacktube"/>
+                            <xsd:enumeration value="selectedpullbacktube"/>
+                            <xsd:enumeration value="unknown"/>
+                            <xsd:enumeration value="mandatoryspottape"/>
+                        </xsd:restriction>
+                    </xsd:simpleType>
+                </xsd:attribute>
+                <xsd:attribute name="optionexpression" type="xsd:string"/>
+                <xsd:attribute name="turnsatbreakout" type="xsd:integer"/>
+                <xsd:attribute name="turnsonbranch" type="xsd:integer"/>
+                <xsd:attribute name="longestdistwithoutitem" type="xsd:double"/>
+                <xsd:attribute name="distfromconnector" type="xsd:double"/>
+                <xsd:attribute name="tubeselection">
+                    <xsd:simpleType>
+                        <xsd:restriction base="xsd:NMTOKEN">
+                            <xsd:enumeration value="Percentage"/>
+                            <xsd:enumeration value="Fixed"/>
+                        </xsd:restriction>
+                    </xsd:simpleType>
+                </xsd:attribute>
+                <xsd:attribute name="tubefactor" type="xsd:double"/>
+                <xsd:attribute name="shrinkabletube" type="xsd:boolean"/>
+                <xsd:attribute name="minallowedbundlediameter" type="xsd:double"/>
+                <xsd:attribute name="maxallowedbundlediameter" type="xsd:double"/>
+                <xsd:attribute name="insulationrun" type="xsd:IDREF"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="OtherComponentType">
+        <xsd:annotation>
+            <xsd:documentation>
+                A component of unknown type located in 3D space, and possible associated with a node.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="Position" type="CartesianPointType"/>
+            <xsd:group ref="PropertyGroup"/>
+        </xsd:choice>
+        <xsd:attribute name="id" type="xsd:ID" use="required"/>
+        <xsd:attribute name="elecid" type="xsd:string"/>
+        <xsd:attribute name="nodeid" type="xsd:IDREF"/>
+        <xsd:attributeGroup ref="CommonPartAttributes"/>
+    </xsd:complexType>
+    <xsd:complexType name="CartesianPointType">
+        <xsd:attribute name="x" type="xsd:double" use="required"/>
+        <xsd:attribute name="y" type="xsd:double" use="required"/>
+        <xsd:attribute name="z" type="xsd:double" use="optional"/>
+    </xsd:complexType>
+    <xsd:complexType name="Cartesian3DCoordinate">
+        <xsd:attribute name="x" type="xsd:double" use="required"/>
+        <xsd:attribute name="y" type="xsd:double" use="required"/>
+        <xsd:attribute name="z" type="xsd:double" use="required"/>
+    </xsd:complexType>
+    <xsd:complexType name="PlaneType">
+        <xsd:sequence>
+            <xsd:group ref="PropertyGroup"/>
+            <xsd:element name="center" type="Cartesian3DCoordinate"/>
+            <xsd:element name="normal" type="Cartesian3DCoordinate"/>
+            <xsd:element name="firstdirection" type="Cartesian3DCoordinate" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <!-- Module Code related attributes -->
+    <xsd:complexType name="BundleAssociationType">
+        <xsd:attribute name="bundleref" type="xsd:IDREF"/>
+    </xsd:complexType>
+    <xsd:complexType name="InsulationRunType">
+        <xsd:complexContent>
+            <xsd:extension base="BundleRegionType">
+                <xsd:sequence>
+                    <xsd:element name="bundleassociation" type="BundleAssociationType" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+                <xsd:attribute name="typeCode" type="xsd:string"/>
+                <xsd:attribute name="pieceCode" type="xsd:string"/>
+                <xsd:attribute name="optionexpression" type="xsd:string"/>
+                <xsd:attributeGroup ref="OriginAttributeGroup"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <!-- Constraints related element type definitions -->
+    <xsd:complexType name="FlatteningConstraintElementType">
+        <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="elementref" type="ConstraintParameterType"/>
+        </xsd:sequence>
+        <xsd:attribute name="value" type="OrientationConstraintType" default="linear">
+            <xsd:annotation>
+                <xsd:documentation>
+                    There can three types of constraints - Orthogonal, Linear and Co-Located.
+                    Orthogonal: Bundle1 and Bundle2 should be flattened out with ninety degree orientation between them
+                    Linear: Bundle1 and Bundle2 should be flattened out with one eighty degree orientation between them
+                    Co-Located: Bundle1 and Bundle2 should be flattened out with some specified fan-out angle between them
+                    The default value will be Linear.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="ConstraintsElementType">
+        <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="flatteningconstraint" type="FlatteningConstraintElementType"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="ConstraintParameterType">
+        <xsd:attribute name="value" type="xsd:IDREF" use="required"/>
+    </xsd:complexType>
+    <xsd:complexType name="BridgesBaseDocumentSchemaInfo">
+            <xsd:annotation>
+                <xsd:documentation>
+                    This element contains information about bridgesbasedocument schema extension. It is embedded
+                    in the schema file inside an appinfo element.
+
+                    Attributes are:- version (e.g. "1.8"), status (e.g. "development", "release").
+
+                </xsd:documentation>
+            </xsd:annotation>
+            <xsd:complexContent>
+                <xsd:extension base="SchemaInfo"/>
+            </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="DocumentBase" abstract="true">
+        <xsd:annotation>
+            <xsd:documentation>
+                This class corresponds to the top-level (root) element.
+
+                Attributes:    author        : Author.
+                creationDate  : Date modified.
+                creationTime  : Time modified.
+                language      : Language used, e.g. in comments.
+                schemaVersion : Version of the schema this file was written for, e.g. "3.0".
+
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:attribute name="author" type="xsd:string"/>
+        <xsd:attribute name="creationDate" type="xsd:date"/>
+        <xsd:attribute name="creationTime" type="xsd:time"/>
+        <xsd:attribute name="language" type="xsd:language" default="en"/>
+        <xsd:attribute name="schemaVersion" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:complexType name="SchemaInfo">
+        <xsd:annotation>
+            <xsd:documentation>
+                This element contains information about basebridgesdocument schema extension. It is embedded
+                in the schema file inside an appinfo element.
+
+                Attributes are:- version (e.g. "1.8"), status (e.g. "development", "release").
+
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="RootElements" type="RootElementsType"/>
+        </xsd:sequence>
+        <xsd:attribute name="author" type="xsd:string"/>
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="date" type="xsd:date"/>
+        <xsd:attribute name="version" type="xsd:string"/>
+        <xsd:attribute name="status" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:simpleType name="RootElementsType" final="list">
+        <xsd:restriction base="xsd:string"/>
+    </xsd:simpleType>
+    <!--                                                                             -->
+    <!--          Definition of complexTypes and attributeGroups reused by           -->
+    <!--          all document schemas and schema instance document                  -->
+    <!--          sub-element                                                        -->
+    <!--                                                                             -->
+    <xsd:complexType name="BasePropertyType">
+        <xsd:attribute name="id" type="xsd:ID"/>
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
+        <xsd:attribute name="propertyuserdefined" default="true"/>
+        <xsd:attribute name="val" type="xsd:string"/>
+        <xsd:attribute name="stability" default="editable">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN">
+                    <xsd:enumeration value="fixed"/>
+                    <xsd:enumeration value="editable"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="type" default="String">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN">
+                    <xsd:enumeration value="String"/>
+                    <xsd:enumeration value="Integer"/>
+                    <xsd:enumeration value="Float"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="HarnessLevelType">
+        <xsd:attribute name="id" type="xsd:ID"/>
+        <xsd:attribute name="name" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:attributeGroup name="ConnectivityCommonAttributes">
+        <xsd:attribute name="harness" type="xsd:string"/>
+        <xsd:attribute name="partnumber" type="xsd:string"/>
+        <xsd:attribute name="partrevision" type="xsd:string"/>
+        <xsd:attribute name="state" type="xsd:string"/>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="RootElementCommonAttributes">
+        <!--<xsd:attribute name="projectid" type="xsd:string"/>  -->
+        <!--<xsd:attribute name="projectname" type="xsd:string"/>  -->
+        <xsd:attribute name="designtype" type="xsd:string"/>
+        <xsd:attribute name="originsystem" type="xsd:string"/>
+        <!--<xsd:attribute name="projectdesc" type="xsd:string" use="optional"/> -->
+        <xsd:attributeGroup ref="DesignElementCommonAttributes"/>
+        <xsd:attributeGroup ref="ProjectElementCommonAttributes"/>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="ProjectElementCommonAttributes">
+        <xsd:attribute name="projectid" type="xsd:string"/>
+        <xsd:attribute name="projectname" type="xsd:string"/>
+        <xsd:attribute name="projectdesc" type="xsd:string" use="optional"/>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="DesignElementCommonAttributes">
+        <xsd:attribute name="id" type="xsd:string"/>
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="revision" type="xsd:string"/>
+        <xsd:attribute name="shortdesc" type="xsd:string"/>
+        <xsd:attribute name="partnumber" type="xsd:string"  use="optional"/>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="DesignReleaseStatusChangeAttributes">
+        <xsd:attribute name="releasestatus" type="xsd:string"/>
+        <xsd:attribute name="revisionname" type="xsd:string"/>
+        <xsd:attribute name="revisionshortdesc" type="xsd:string"/>
+        <xsd:attribute name="revisionpartnumber" type="xsd:string"/>
+    </xsd:attributeGroup>
+    <xsd:complexType name="BaseVarianceType">
+        <xsd:attribute name="optionexpression" type="xsd:string" use="required"/>
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
+        <xsd:attribute name="val" type="xsd:string" use="required"/>
+        <xsd:attribute name="type" default="attribute">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN">
+                    <xsd:enumeration value="attribute"/>
+                    <xsd:enumeration value="property"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="FunctionalVariantType">
+        <xsd:attribute name="optionexpression" type="xsd:string" use="required"/>
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
+        <xsd:attribute name="val" type="xsd:string" use="required"/>
+    </xsd:complexType>
+    <xsd:complexType name="ProductionVariantType">
+        <xsd:attribute name="optionexpression" type="xsd:string" use="required"/>
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
+        <xsd:attribute name="val" type="xsd:string" use="required"/>
+    </xsd:complexType>
+    <xsd:group name="CommonElementsGroup">
+        <xsd:sequence>
+            <xsd:element name="harnesslevel" type="HarnessLevelType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:group ref="PropertyGroup" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:group>
+    <xsd:group name="PropertyGroup">
+        <xsd:sequence>
+            <xsd:element name="property" type="BasePropertyType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="variant" type="BaseVarianceType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="functionalvariant" type="FunctionalVariantType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="productionvariant" type="ProductionVariantType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="refedmodule" type="BaseReferredModuleType" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:group>
+    <xsd:complexType name="BaseReferredModuleType">
+        <xsd:attribute name="id" type="xsd:IDREF"/>
+        <xsd:attribute name="percentage" type="xsd:double"/>
+        <xsd:attribute name="codeType" default="user">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN">
+                    <xsd:enumeration value="user"/>
+                    <xsd:enumeration value="generated"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="BaseConnectivitySchemaInfo">
+            <xsd:annotation>
+                <xsd:documentation>
+                    This element contains information about baseconnectivity schema extension. It is embedded
+                    in the schema file inside an appinfo element.
+
+                    Attributes are:- version (e.g. "1.8"), status (e.g. "development", "release").
+
+                </xsd:documentation>
+            </xsd:annotation>
+            <xsd:attribute name="author" type="xsd:string"/>
+            <xsd:attribute name="name" type="xsd:string"/>
+            <xsd:attribute name="date" type="xsd:date"/>
+            <xsd:attribute name="version" type="xsd:string"/>
+            <xsd:attribute name="status" type="xsd:string"/>
+    </xsd:complexType>
+    <!--                                                                             -->
+    <!--          Definition of common attributes reused throughout base             -->
+    <!--          connectivity elements.                                             -->
+    <!--                                                                             -->
+    <xsd:attributeGroup name="BaseConnectivityCommonAttributes">
+        <xsd:attribute name="id" type="xsd:ID" use="required"/>
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="shortdescription" type="xsd:string"/>
+        <xsd:attribute name="optionexpression" type="xsd:string"/>
+        <xsd:attribute name="elecid" type="xsd:string"/>
+        <xsd:attribute name="design" type="xsd:IDREF"/>
+    </xsd:attributeGroup>
+    <xsd:simpleType name="LengthChangeTypeAttribute">
+        <xsd:restriction base="xsd:NMTOKEN">
+            <xsd:enumeration value="Absolute"/>
+            <xsd:enumeration value="Offset"/>
+            <xsd:enumeration value="Neither"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:attributeGroup name="LengthChangeAttributes">
+        <xsd:attribute name="lengthchangetype" type="LengthChangeTypeAttribute" default="Neither"/>
+        <xsd:attribute name="lengthchangevalue" type="xsd:double"/>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="CutBackAttributes">
+        <xsd:attribute name="cutbackvalueend1" type="xsd:string"/>
+        <xsd:attribute name="cutbackvalueend2" type="xsd:string"/>
+        <xsd:attribute name="unmodifiedcutbackvalueend1" type="xsd:string"/>
+        <xsd:attribute name="unmodifiedcutbackvalueend2" type="xsd:string"/>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="MulticoreCutBackAttributes">
+        <xsd:attribute name="cutbackchangetype" type="xsd:string"/>
+        <xsd:attribute name="cutbackchangevalue" type="xsd:string"/>
+        <xsd:attribute name="cutbackvalue" type="xsd:string"/>
+        <xsd:attribute name="unmodifiedcutbackvalue" type="xsd:string"/>
+        <xsd:attribute name="unmodifieduntwistedvalue" type="xsd:string"/>
+        <xsd:attribute name="untwistedchangetype" type="xsd:string"/>
+        <xsd:attribute name="untwistedchangevalue" type="xsd:string"/>
+        <xsd:attribute name="untwistedvalue" type="xsd:string"/>
+    </xsd:attributeGroup>
+    <!--                                                                             -->
+    <!--          Start of complexType definitions for baseconnectivity              -->
+    <!--                                                                             -->
+    <xsd:complexType name="BaseCenterstripspliceType">
+        <xsd:attribute name="spliceref" type="xsd:IDREF" use="required"/>
+        <xsd:attribute name="striplength" type="xsd:double"/>
+        <xsd:attribute name="throughorder" type="xsd:integer"/>
+        <xsd:attributeGroup ref="LengthChangeAttributes"/>
+    </xsd:complexType>
+    <xsd:complexType name="BaseConnectionType">
+        <xsd:attribute name="pinref" type="xsd:IDREF"/>
+    </xsd:complexType>
+    <xsd:complexType name="BaseWireConnectionType">
+        <xsd:complexContent>
+            <xsd:extension base="BaseConnectionType">
+                <xsd:attribute name="materialcode" type="xsd:string"/>
+                <xsd:attribute name="terminalpartspec" type="xsd:string"/>
+                <xsd:attribute name="sealpartspec" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="BaseShieldConnectionType">
+        <xsd:complexContent>
+            <xsd:extension base="BaseConnectionType">
+                <xsd:attribute name="materialcode" type="xsd:string"/>
+                <xsd:attribute name="terminalpartspec" type="xsd:string"/>
+                <xsd:attribute name="sealpartspec" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="BaseConnectorType">
+        <xsd:attributeGroup ref="BaseConnectivityCommonAttributes"/>
+        <xsd:attribute name="owner" type="xsd:IDREF"/>
+        <xsd:attribute name="type" default="plug">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN">
+                    <xsd:enumeration value="deviceconnector"/>
+                    <xsd:enumeration value="plug"/>
+                    <xsd:enumeration value="jack"/>
+                    <xsd:enumeration value="inlineplug"/>
+                    <xsd:enumeration value="inlinejack"/>
+                    <xsd:enumeration value="externalsplice"/>
+                    <xsd:enumeration value="interconnect"/>
+                    <xsd:enumeration value="interconnectinlinejack"/>
+                    <xsd:enumeration value="interconnectinlineplug"/>
+                    <xsd:enumeration value="interface"/>
+                    <xsd:enumeration value="hole"/>
+                    <xsd:enumeration value="ringterminal"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="BaseDeviceType">
+        <xsd:attributeGroup ref="BaseConnectivityCommonAttributes"/>
+        <xsd:attribute name="type" default="device">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN">
+                    <xsd:enumeration value="ground"/>
+                    <xsd:enumeration value="interconnect"/>
+                    <xsd:enumeration value="device"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="BaseMemberType">
+        <xsd:attribute name="ref" type="xsd:IDREF" use="required"/>
+    </xsd:complexType>
+    <xsd:complexType name="BaseMulticoreType">
+        <xsd:attributeGroup ref="BaseConnectivityCommonAttributes"/>
+        <xsd:attribute name="owner" type="xsd:IDREF"/>
+    </xsd:complexType>
+    <xsd:complexType name="BaseNetType">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="connection" type="BaseConnectionType"/>
+            <xsd:group ref="CommonElementsGroup"/>
+        </xsd:choice>
+        <xsd:attributeGroup ref="BaseConnectivityCommonAttributes"/>
+    </xsd:complexType>
+    <xsd:complexType name="ConnectedPinType">
+        <xsd:attribute name="id" type="xsd:IDREF" use="required"/>
+    </xsd:complexType>
+    <xsd:complexType name="BasePinType">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="connectedpin" type="ConnectedPinType"/>
+        </xsd:choice>
+        <xsd:attributeGroup ref="BaseConnectivityCommonAttributes"/>
+        <xsd:attribute name="stud" type="xsd:boolean"/>
+    </xsd:complexType>
+    <xsd:complexType name="BaseShieldType">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="connection" type="BaseShieldConnectionType"/>
+            <xsd:group ref="CommonElementsGroup"/>
+        </xsd:choice>
+        <xsd:attributeGroup ref="BaseConnectivityCommonAttributes"/>
+    </xsd:complexType>
+    <xsd:complexType name="BaseSpliceType">
+        <xsd:attributeGroup ref="BaseConnectivityCommonAttributes"/>
+    </xsd:complexType>
+    <xsd:complexType name="BaseWireType">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="connection" type="BaseWireConnectionType"/>
+            <xsd:element name="centerstripsplice" type="BaseCenterstripspliceType"/>
+            <xsd:group ref="CommonElementsGroup"/>
+        </xsd:choice>
+        <xsd:attributeGroup ref="BaseConnectivityCommonAttributes"/>
+    </xsd:complexType>
+    <xsd:complexType name="BaseDesignType">
+        <xsd:attribute name="id" type="xsd:ID" use="required"/>
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="revision" type="xsd:string"/>
+        <xsd:attribute name="shortdesc" type="xsd:string"/>
+        <xsd:attribute name="designtype" type="xsd:string"/>
+        <xsd:attribute name="abstraction" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:complexType name="BaseOptionSetType">
+        <xsd:annotation>
+            <xsd:documentation>There is a single option set in a design (first child element) to describe all options used.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="option" type="BaseOptionType"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="BaseScopeSetType">
+        <xsd:annotation>
+            <xsd:documentation>There is a single scope set in a design to describe all scopes applicable.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="scope" type="BaseScopeType"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="BaseOptionType">
+        <xsd:annotation>
+            <xsd:documentation>An option is defined by a name (unique) and a description</xsd:documentation>
+        </xsd:annotation>
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="description" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:complexType name="BaseScopeType">
+        <xsd:annotation>
+            <xsd:documentation>A scope is defined by a name, category and a description and refered by id (unique)</xsd:documentation>
+        </xsd:annotation>
+        <xsd:attribute name="id" type="xsd:ID"/>
+        <xsd:attribute name="category" type="xsd:string"/>
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="description" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:complexType name="BaseOptionRefType">
+        <xsd:annotation>
+            <xsd:documentation>An option is referenced by name</xsd:documentation>
+        </xsd:annotation>
+        <xsd:attribute name="name" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:complexType name="BaseModuleCodeSetType">
+        <xsd:annotation>
+            <xsd:documentation>There is a single modulecode set in a design (first child element) to describe all modulecodes and variant module codes used.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="modulecode" type="BaseModuleCodeType" minOccurs="0"/>
+            <xsd:element name="variantmodulecode" type="BaseVariantModuleCodeType" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="BaseExclusiveModuleCodeType">
+        <xsd:annotation>
+            <xsd:documentation>A modulecode can be an exclusive modulecode in another modulecode</xsd:documentation>
+        </xsd:annotation>
+        <xsd:attribute name="moduleref" type="xsd:IDREF"/>
+    </xsd:complexType>
+    <xsd:complexType name="BaseInclusiveModuleCodeType">
+        <xsd:annotation>
+            <xsd:documentation>A modulecode can be an inclusive modulecode in another modulecode</xsd:documentation>
+        </xsd:annotation>
+        <xsd:attribute name="moduleref" type="xsd:IDREF"/>
+        <xsd:attribute name="mutual" type="xsd:boolean" />
+    </xsd:complexType>
+    <xsd:complexType name="BaseInclusiveModuleCodeGroupType">
+        <xsd:annotation>
+            <xsd:documentation>A modulecode can have an inclusive modulecode group</xsd:documentation>
+        </xsd:annotation>
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="inclusivemodule" type="BaseInclusiveModuleCodeType"/>
+        </xsd:choice>
+        <xsd:attribute name="moduleref" type="xsd:IDREF"/>
+        <xsd:attribute name="mutual" type="xsd:boolean" use="required"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="BaseModuleCodeType">
+        <xsd:annotation>
+            <xsd:documentation>A modulecode is defined by an id, a name (unique) and a description</xsd:documentation>
+        </xsd:annotation>
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="exclusivemodule" type="BaseExclusiveModuleCodeType"/>
+            <xsd:element name="inclusivemodule" type="BaseInclusiveModuleCodeType"/>
+            <xsd:element name="inclusivemodulegroup" type="BaseInclusiveModuleCodeGroupType"/>
+        </xsd:choice>
+        <xsd:attribute name="id" type="xsd:ID" use="required"/>
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="description" type="xsd:string"/>
+        <xsd:attribute name="type" default="functional">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN">
+                    <xsd:enumeration value="functional"/>
+                    <xsd:enumeration value="production"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="subtype" default="core">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN">
+                    <xsd:enumeration value="core"/>
+                    <xsd:enumeration value="technical"/>
+                    <xsd:enumeration value="obsolete"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="assignfactor" type="xsd:integer"/>
+    </xsd:complexType>
+    <xsd:complexType name="BaseVariantModuleCodeType">
+        <xsd:annotation>
+            <xsd:documentation>A variant module code is defined by an id, a name (unique) and a description</xsd:documentation>
+        </xsd:annotation>
+        <xsd:attribute name="id" type="xsd:ID" use="required"/>
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="description" type="xsd:string"/>
+        <xsd:attribute name="type" default="functional">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN">
+                    <xsd:enumeration value="functional"/>
+                    <xsd:enumeration value="production"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="BaseModuleCodeRefType">
+        <xsd:annotation>
+            <xsd:documentation>A modulecode is referenced by id</xsd:documentation>
+        </xsd:annotation>
+        <xsd:attribute name="id" type="xsd:IDREF"/>
+    </xsd:complexType>
+    <!--                                                                             -->
+    <!--       Definition of common attributes reused throughout bridges             -->
+    <!--       connectivity elements.                                                -->
+    <!--                                                                             -->
+    <xsd:attributeGroup name="SymbolAttributes">
+        <xsd:attribute name="symbol" type="xsd:string"/>
+        <xsd:attribute name="symbollibrary" type="xsd:string"/>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="IECNamingAttributes">
+        <xsd:attribute name="function" type="xsd:string"/>
+        <xsd:attribute name="location" type="xsd:string"/>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="ArchitecturalAttributes">
+        <xsd:attribute name="architecturalCost" type="xsd:double"/>
+        <xsd:attribute name="weight" type="xsd:double"/>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="NamedObjectAttributes">
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="displayName" type="xsd:string"/>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="CommonPartAttributes">
+        <xsd:attribute name="partnumber" type="xsd:string"/>
+        <xsd:attribute name="partrevision" type="xsd:string"/>
+        <xsd:attribute name="incBom" type="xsd:boolean"/>
+        <xsd:attribute name="librarytypecode" type="xsd:string"/>
+        <xsd:attributeGroup ref="NamedObjectAttributes"/>
+        <xsd:attribute name="shortdescription" type="xsd:string"/>
+        <xsd:attributeGroup ref="ArchitecturalAttributes"/>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="ConnectorCommonAttributes">
+        <xsd:attribute name="shellid" type="xsd:IDREF"/>
+        <xsd:attributeGroup ref="OriginAttributeGroup"/>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="SupplierPartAttributes">
+        <xsd:attribute name="supplierpart"/>
+        <xsd:attribute name="customerpart"/>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="HarnessPartAttributes">
+        <xsd:attributeGroup ref="CommonPartAttributes"/>
+        <xsd:attributeGroup ref="SupplierPartAttributes"/>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="BackshellAttributes">
+        <xsd:annotation>
+            <xsd:documentation>
+                Base attributes of a backshell.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:attribute name="id" type="xsd:ID"/>
+        <xsd:attributeGroup ref="HarnessPartAttributes"/>
+        <xsd:attribute name="nodeid" type="xsd:IDREF"/>
+        <xsd:attribute name="length" type="xsd:double"/>
+        <xsd:attribute name="optionexpression" type="xsd:string"/>
+        <xsd:attribute name="harness" type="xsd:string"/>
+        <xsd:attribute name="elecid" type="xsd:string"/>
+        <xsd:attributeGroup ref="SymbolAttributes"/>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="WireAttributesGroup">
+        <xsd:attribute name="wirelength" type="xsd:string"/>
+        <xsd:attribute name="wirecolor" type="xsd:string"/>
+        <xsd:attribute name="outsidediameter" type="xsd:string"/>
+        <xsd:attribute name="wirecsa" type="xsd:string"/>
+        <xsd:attribute name="bendradius" type="xsd:string"/>
+        <xsd:attribute name="wirematerial" type="xsd:string"/>
+        <xsd:attribute name="wiretype" type="xsd:string"/>
+        <xsd:attribute name="wirespec" type="xsd:string"/>
+        <xsd:attribute name="sepcode" type="xsd:string"/>
+        <xsd:attribute name="wirenote" type="xsd:string"/>
+        <xsd:attribute name="signal" type="xsd:string"/>
+        <xsd:attribute name="secondarywirenumber" type="xsd:string"/>
+        <xsd:attribute name="shield" type="xsd:boolean"/>
+        <xsd:attribute name="unmodifiedlength" type="xsd:string"/>
+        <xsd:attribute name="incBom" type="xsd:boolean"/>
+        <xsd:attribute name="incCut" type="xsd:boolean"/>
+        <xsd:attribute name="wireCode" type="xsd:string"/>
+        <xsd:attribute name="terminalMaterial" type="xsd:string"/>
+        <xsd:attribute name="bypass" type="xsd:boolean"/>
+        <xsd:attributeGroup ref="OriginAttributeGroup"/>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="OriginAttributeGroup">
+        <xsd:attribute name="origin">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN">
+                    <xsd:enumeration value="xc"/>
+                    <xsd:enumeration value="other"/>
+                    <xsd:enumeration value="unset"/>
+                    <xsd:enumeration value="logic"/>
+                    <xsd:enumeration value="topology"/>
+                    <xsd:enumeration value="integrator"/>
+                    <xsd:enumeration value="external"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+    </xsd:attributeGroup>
+    <xsd:attributeGroup name="MulticoreAttributes">
+        <xsd:attribute name="owner" type="xsd:IDREF"/>
+        <xsd:attribute name="cablenote" type="xsd:string"/>
+        <xsd:attribute name="cablecolor" type="xsd:string"/>
+        <xsd:attribute name="cablecoverthickness" type="xsd:string"/>
+        <xsd:attribute name="cablematerial" type="xsd:string"/>
+        <xsd:attribute name="cablelength" type="xsd:string"/>
+        <xsd:attribute name="cablespec" type="xsd:string"/>
+        <xsd:attribute name="unmodifiedlength" type="xsd:string"/>
+        <xsd:attribute name="sepcode" type="xsd:string"/>
+        <xsd:attribute name="outsidediameter" type="xsd:string"/>
+        <xsd:attribute name="bendradius" type="xsd:string"/>
+        <xsd:attribute name="wirelengthratio" type="xsd:string"/>
+        <xsd:attribute name="customermulticorename" type="xsd:string"/>
+        <xsd:attribute name="cutbackchangetypeend1" default="Neither">
+            <xsd:annotation>
+                <xsd:documentation>
+                    Cut Back Change Type can be Absolute, Offset or Neither
+                </xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN">
+                    <xsd:enumeration value="Neither"/>
+                    <xsd:enumeration value="Absolute"/>
+                    <xsd:enumeration value="Offset"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="cutbackchangevalueend1" type="xsd:double"/>
+        <xsd:attribute name="cutbackchangetypeend2" default="Neither">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN">
+                    <xsd:enumeration value="Neither"/>
+                    <xsd:enumeration value="Absolute"/>
+                    <xsd:enumeration value="Offset"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="cutbackchangevalueend2" type="xsd:double"/>
+        <xsd:attribute name="multicoreCode" type="xsd:string"/>
+        <xsd:attribute name="incBom" type="xsd:boolean"/>
+        <xsd:attribute name="incCut" type="xsd:boolean"/>
+        <xsd:attribute name="sheathed" type="xsd:boolean"/>
+    </xsd:attributeGroup>
+    <xsd:simpleType name="MulticoreTypeAttribute">
+        <xsd:restriction base="xsd:NMTOKEN">
+            <xsd:enumeration value="coax"/>
+            <xsd:enumeration value="oval"/>
+            <xsd:enumeration value="twist-commercial"/>
+            <xsd:enumeration value="twist-military"/>
+            <xsd:enumeration value="twist-z"/>
+            <xsd:enumeration value="sheath"/>
+            <xsd:enumeration value="unk"/>
+            <xsd:enumeration value="overbraid"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="AssemblyTypeAttribute">
+        <xsd:restriction base="xsd:NMTOKEN">
+            <xsd:enumeration value="StandardAssembly"/>
+            <xsd:enumeration value="ConnectorAssembly"/>
+            <xsd:enumeration value="InHouseAssembly"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:complexType name="ConnectionType">
+        <xsd:complexContent>
+            <xsd:extension base="BaseConnectionType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="BackshellType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Can belong to a connector or the shell element of a modular connector.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="pin" type="PinType"/>
+            <xsd:group ref="CommonElementsGroup" minOccurs="0"/>
+        </xsd:choice>
+        <xsd:attributeGroup ref="BackshellAttributes"/>
+    </xsd:complexType>
+    <xsd:complexType name="ConnectorRefinementType">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="refedmodule" type="BaseReferredModuleType"/>
+        </xsd:choice>
+        <xsd:attribute name="harness" type="xsd:string"/>
+        <xsd:attribute name="signal" type="xsd:string"/>
+        <xsd:attribute name="optionexpression" type="xsd:string"/>
+        <xsd:attribute name="generalizedcavity" type="xsd:string" use="required"/>
+    </xsd:complexType>
+    <xsd:complexType name="MatingType">
+        <xsd:attribute name="id" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:complexType name="SpecializedPinType">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="generalizedmappingdata" type="ConnectorRefinementType"/>
+            <xsd:element name="mating" type="MatingType"/>
+        </xsd:choice>
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="id" type="xsd:string" use="required"/>
+        <xsd:attribute name="sealed" type="xsd:boolean"/>
+        <xsd:attribute name="plugged" type="xsd:boolean"/>
+    </xsd:complexType>
+    <xsd:complexType name="SpecializedConnectorType">
+        <xsd:annotation>
+            <xsd:documentation>
+                This element is used only in the Capital Integrator Wiring Import flow.
+                Specialized connectors are modelled as children of a generalized (regular) connector. In the standard
+                Bridges flow, this element is never output:
+                specialized connectors are output as regular connectors if the selected harness
+                levels are compatible, otherwise, the generalized connector is output.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="pin">
+                <xsd:complexType>
+                    <xsd:complexContent>
+                        <xsd:extension base="SpecializedPinType">
+                            <xsd:group ref="CommonElementsGroup"/>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="mating" type="MatingType"/>
+            <xsd:group ref="CommonElementsGroup"/>
+        </xsd:choice>
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="id" type="xsd:string" use="required"/>
+        <xsd:attribute name="partnumber" type="xsd:string"/>
+        <xsd:attribute name="partrevision" type="xsd:string"/>
+        <xsd:attribute name="quantity" type="xsd:double"/>
+        <xsd:attribute name="architecturalCost" type="xsd:double"/>
+        <xsd:attribute name="weight" type="xsd:double"/>
+        <xsd:attribute name="datum" default="front">
+            <xsd:annotation>
+                <xsd:documentation>
+                    The connector datum value indicates where the wires terminate within the connector.
+                </xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN">
+                    <xsd:enumeration value="front"/>
+                    <xsd:enumeration value="back"/>
+                    <xsd:enumeration value="terminal"/>
+                    <xsd:enumeration value="default"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="backshellOrientation" type="xsd:string"/>
+        <xsd:attribute name="defaultTerminalMaterial" type="xsd:string"/>
+        <xsd:attribute name="keywayOrientation" type="xsd:string"/>
+        <xsd:attribute name="mcadID" type="xsd:string"/>
+        <xsd:attribute name="shortdescription" type="xsd:string"/>
+        <xsd:attribute name="optionexpression" type="xsd:string"/>
+        <xsd:attribute name="harness" type="xsd:string"/>
+        <xsd:attribute name="sealed" type="xsd:boolean"/>
+        <xsd:attribute name="plugged" type="xsd:boolean"/>
+        <xsd:attribute name="greased" type="xsd:boolean"/>
+        <xsd:attribute name="incBom" type="xsd:boolean"/>
+        <xsd:attribute name="idc" type="xsd:boolean"/>
+        <xsd:attribute name="backshellPlugged" type="xsd:boolean"/>
+        <xsd:attribute name="pokeHome" type="xsd:boolean"/>
+        <xsd:attributeGroup ref="SupplierPartAttributes"/>
+    </xsd:complexType>
+<!--    <xsd:complexType name="DeviceType">-->
+<!--        <xsd:complexContent>-->
+<!--            <xsd:extension base="BaseDeviceType">-->
+<!--                <xsd:choice minOccurs="0" maxOccurs="unbounded">-->
+<!--                    <xsd:element name="pin">-->
+<!--                        <xsd:complexType>-->
+<!--                            <xsd:complexContent>-->
+<!--                                <xsd:extension base="DevicePinType"/>-->
+<!--                            </xsd:complexContent>-->
+<!--                        </xsd:complexType>-->
+<!--                    </xsd:element>-->
+<!--                    <xsd:group ref="CommonElementsGroup"/>-->
+<!--                </xsd:choice>-->
+<!--                <xsd:attributeGroup ref="ConnectivityCommonAttributes"/>-->
+<!--                <xsd:attributeGroup ref="SupplierPartAttributes"/>-->
+<!--                <xsd:attributeGroup ref="ArchitecturalAttributes"/>-->
+<!--                <xsd:attributeGroup ref="SymbolAttributes"/>-->
+<!--                <xsd:attributeGroup ref="IECNamingAttributes"/>-->
+<!--                <xsd:attributeGroup ref="OriginAttributeGroup"/>-->
+<!--                <xsd:attribute name="incBom" type="xsd:boolean"/>-->
+<!--                <xsd:attribute name="librarytypecode" type="xsd:string"/>-->
+<!--                <xsd:attribute name="materialcode" type="xsd:string"/>-->
+<!--                <xsd:attribute name="color" type="xsd:string"/>-->
+<!--            </xsd:extension>-->
+<!--        </xsd:complexContent>-->
+<!--    </xsd:complexType>-->
+    <xsd:complexType name="MemberType">
+        <xsd:complexContent>
+            <xsd:extension base="BaseMemberType">
+                <xsd:attribute name="type" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="InterconnectMemberType">
+        <xsd:attribute name="ref" type="xsd:ID" use="required"/>
+        <xsd:attribute name="type" use="required">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="wire"/>
+                    <xsd:enumeration value="multicore"/>
+                    <xsd:enumeration value="overbraid"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="partnumber" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:complexType name="AssemblyMemberType">
+        <xsd:complexContent>
+            <xsd:extension base="BaseMemberType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="OverbraidPinType">
+        <xsd:attribute name="pin" type="xsd:IDREF"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="NetType">
+        <xsd:complexContent>
+            <xsd:extension base="BaseNetType">
+                <xsd:attribute name="wirecolor" type="xsd:string"/>
+                <xsd:attribute name="outsidediameter" type="xsd:string"/>
+                <xsd:attribute name="wirecsa" type="xsd:string"/>
+                <xsd:attribute name="wirematerial" type="xsd:string"/>
+                <xsd:attribute name="wirespec" type="xsd:string"/>
+                <xsd:attributeGroup ref="ConnectivityCommonAttributes"/>
+                <xsd:attributeGroup ref="SupplierPartAttributes"/>
+                <xsd:attributeGroup ref="ArchitecturalAttributes"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="PinType">
+        <xsd:complexContent>
+            <xsd:extension base="BasePinType">
+                <xsd:group ref="CommonElementsGroup"/>
+                <xsd:attributeGroup ref="ConnectivityCommonAttributes"/>
+                <xsd:attribute name="cavity" type="xsd:boolean"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="DevicePinType">
+        <xsd:complexContent>
+            <xsd:extension base="PinType">
+                <xsd:attribute name="connectorcavity" type="xsd:string"/>
+                <xsd:attribute name="connectorgroup" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="PropertyType">
+        <xsd:complexContent>
+            <xsd:extension base="BasePropertyType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="ShieldType">
+        <xsd:complexContent>
+            <xsd:extension base="BaseShieldType">
+                <xsd:attribute name="wirecolor" type="xsd:string"/>
+                <xsd:attribute name="outsidediameter" type="xsd:string"/>
+                <xsd:attribute name="wirecsa" type="xsd:string"/>
+                <xsd:attribute name="wirematerial" type="xsd:string"/>
+                <xsd:attribute name="wirespec" type="xsd:string"/>
+                <xsd:attribute name="shieldlength" type="xsd:string"/>
+                <xsd:attributeGroup ref="ConnectivityCommonAttributes"/>
+                <xsd:attributeGroup ref="SupplierPartAttributes"/>
+                <xsd:attributeGroup ref="ArchitecturalAttributes"/>
+                <xsd:attribute name="signal" type="xsd:string"/>
+                <xsd:attribute name="module" type="xsd:string"/>
+                <xsd:attribute name="incBom" type="xsd:boolean"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="WireType">
+        <xsd:complexContent>
+            <xsd:extension base="BaseWireType">
+                <xsd:attributeGroup ref="WireAttributesGroup"/>
+                <xsd:attributeGroup ref="LengthChangeAttributes"/>
+                <xsd:attributeGroup ref="ConnectivityCommonAttributes"/>
+                <xsd:attributeGroup ref="SupplierPartAttributes"/>
+                <xsd:attributeGroup ref="ArchitecturalAttributes"/>
+                <xsd:attribute name="module" type="xsd:string"/>
+                <xsd:attribute name="librarytypecode" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="AssemblyType">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="assemblymember" type="AssemblyMemberType"/>
+            <xsd:group ref="CommonElementsGroup"/>
+        </xsd:choice>
+        <xsd:attributeGroup ref="BaseConnectivityCommonAttributes"/>
+        <xsd:attributeGroup ref="ConnectivityCommonAttributes"/>
+        <xsd:attributeGroup ref="SupplierPartAttributes"/>
+        <xsd:attributeGroup ref="ArchitecturalAttributes"/>
+        <xsd:attribute name="assemblyType" type="AssemblyTypeAttribute" default="StandardAssembly"/>
+        <xsd:attribute name="incBom" type="xsd:boolean"/>
+        <xsd:attributeGroup ref="OriginAttributeGroup"/>
+    </xsd:complexType>
+    <xsd:complexType name="InterconnectConductorType">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="connection" type="ConnectionType"/>
+            <xsd:element name="member" type="InterconnectMemberType"/>
+            <xsd:group ref="CommonElementsGroup"/>
+        </xsd:choice>
+        <xsd:attributeGroup ref="BaseConnectivityCommonAttributes"/>
+        <xsd:attributeGroup ref="ConnectivityCommonAttributes"/>
+        <xsd:attributeGroup ref="SupplierPartAttributes"/>
+        <xsd:attributeGroup ref="ArchitecturalAttributes"/>
+    </xsd:complexType>
+    <xsd:complexType name="FunctionType">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="port">
+                <xsd:complexType>
+                    <xsd:complexContent>
+                        <xsd:extension base="PortType"/>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="property" type="BasePropertyType"/>
+        </xsd:choice>
+        <xsd:attribute name="id" type="xsd:ID"/>
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="architecturalCost" type="xsd:double"/>
+        <xsd:attribute name="shortdescription" type="xsd:string"/>
+        <xsd:attribute name="optionexpression" type="xsd:string"/>
+        <xsd:attribute name="implementation">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN">
+                    <xsd:enumeration value="AnalogToDigital"/>
+                    <xsd:enumeration value="DigitalToAnalog"/>
+                    <xsd:enumeration value="MixedSignal"/>
+                    <xsd:enumeration value="Sensor"/>
+                    <xsd:enumeration value="Actuator"/>
+                    <xsd:enumeration value="Other"/>
+                    <xsd:enumeration value="PWRVoltage"/>
+                    <xsd:enumeration value="Supply"/>
+                    <xsd:enumeration value="Ground"/>
+                    <xsd:enumeration value="AUTOSAR"/>
+                    <xsd:enumeration value="C"/>
+                    <xsd:enumeration value="MatLab"/>
+                    <xsd:enumeration value="SystemC"/>
+                    <xsd:enumeration value="UML"/>
+                    <xsd:enumeration value="NotSet"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="maximumlatency" type="xsd:double"/>
+        <xsd:attribute name="powerconsumption" type="xsd:double"/>
+        <xsd:attribute name="frequency" type="xsd:double"/>
+        <xsd:attribute name="runtime" type="xsd:double"/>
+        <xsd:attribute name="thermaloutput" type="xsd:double"/>
+        <xsd:attribute name="type">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN">
+                    <xsd:enumeration value="Driver"/>
+                    <xsd:enumeration value="Hardware"/>
+                    <xsd:enumeration value="Power"/>
+                    <xsd:enumeration value="Software"/>
+                    <xsd:enumeration value="NotSet"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="cpu" type="xsd:double"/>
+        <xsd:attribute name="rom" type="xsd:int"/>
+        <xsd:attribute name="flash" type="xsd:int"/>
+        <xsd:attribute name="ram" type="xsd:int"/>
+        <xsd:attribute name="volume" type="xsd:double"/>
+        <xsd:attribute name="sectionalarea" type="xsd:double"/>
+        <xsd:attribute name="weight" type="xsd:double"/>
+        <xsd:attribute name="role" type="xsd:string"/>
+        <xsd:attribute name="designid" type="xsd:string"/>
+        <xsd:attribute name="partnumber" type="xsd:string"/>
+        <xsd:attributeGroup ref="SymbolAttributes"/>
+    </xsd:complexType>
+    <xsd:complexType name="PortType">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="property" type="BasePropertyType"/>
+        </xsd:choice>
+        <xsd:attribute name="id" type="xsd:ID"/>
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="bitsize" type="xsd:int"/>
+        <xsd:attribute name="shortdescription" type="xsd:string"/>
+        <xsd:attribute name="optionexpression" type="xsd:string"/>
+        <xsd:attribute name="direction">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN">
+                    <xsd:enumeration value="In"/>
+                    <xsd:enumeration value="Out"/>
+                    <xsd:enumeration value="Bidirectional"/>
+                    <xsd:enumeration value="NotSet"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="type">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN">
+                    <xsd:enumeration value="RF"/>
+                    <xsd:enumeration value="Electrical"/>
+                    <xsd:enumeration value="Optical"/>
+                    <xsd:enumeration value="Software"/>
+                    <xsd:enumeration value="NotSet"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="SignalType">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="connection">
+                <xsd:complexType>
+                    <xsd:complexContent>
+                        <xsd:extension base="SignalConnectionType"/>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="property" type="BasePropertyType"/>
+            <xsd:element name="extendedattribute">
+                <xsd:complexType>
+                    <xsd:complexContent>
+                        <xsd:extension base="ExtendedAttributeType"/>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:choice>
+        <xsd:attribute name="id" type="xsd:ID"/>
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="Sig" type="xsd:string"/>
+        <xsd:attribute name="SigV" type="xsd:string"/>
+        <xsd:attribute name="bitsize" type="xsd:int"/>
+        <xsd:attribute name="multiplexed" type="xsd:boolean"/>
+        <xsd:attribute name="maximumlatency" type="xsd:double"/>
+        <xsd:attribute name="maximiumage" type="xsd:int"/>
+        <xsd:attribute name="frequency" type="xsd:double"/>
+        <xsd:attribute name="shortdescription" type="xsd:string"/>
+        <xsd:attribute name="optionexpression" type="xsd:string"/>
+        <xsd:attribute name="implementation">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN">
+                    <xsd:enumeration value="Bluetooth"/>
+                    <xsd:enumeration value="WiFi"/>
+                    <xsd:enumeration value="ThreeG"/>
+                    <xsd:enumeration value="CanHi"/>
+                    <xsd:enumeration value="CanLo"/>
+                    <xsd:enumeration value="Ethernet"/>
+                    <xsd:enumeration value="Flexray"/>
+                    <xsd:enumeration value="LIN"/>
+                    <xsd:enumeration value="J1939"/>
+                    <xsd:enumeration value="ISOBUS"/>
+                    <xsd:enumeration value="MOST25"/>
+                    <xsd:enumeration value="MOST50"/>
+                    <xsd:enumeration value="MOST150"/>
+                    <xsd:enumeration value="NotSet"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="type">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN">
+                    <xsd:enumeration value="RF"/>
+                    <xsd:enumeration value="Electrical"/>
+                    <xsd:enumeration value="Optical"/>
+                    <xsd:enumeration value="Software"/>
+                    <xsd:enumeration value="NotSet"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="MessageType">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="connection">
+                <xsd:complexType>
+                    <xsd:complexContent>
+                        <xsd:extension base="SignalConnectionType"/>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="messagesignal" type="SignalType"/>
+            <xsd:element name="property" type="BasePropertyType"/>
+            <xsd:element name="extendedattribute">
+                <xsd:complexType>
+                    <xsd:complexContent>
+                        <xsd:extension base="ExtendedAttributeType"/>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:choice>
+        <xsd:attribute name="id" type="xsd:ID"/>
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="OTI" type="xsd:string"/>
+        <xsd:attribute name="OTIV" type="xsd:string"/>
+        <xsd:attribute name="MessageInstance" type="xsd:string"/>
+        <xsd:attribute name="bitsize" type="xsd:int"/>
+        <xsd:attribute name="multiplexed" type="xsd:boolean"/>
+        <xsd:attribute name="maximumlatency" type="xsd:double"/>
+        <xsd:attribute name="maximiumage" type="xsd:int"/>
+        <xsd:attribute name="frequency" type="xsd:double"/>
+        <xsd:attribute name="shortdescription" type="xsd:string"/>
+        <xsd:attribute name="optionexpression" type="xsd:string"/>
+        <xsd:attribute name="implementation">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN">
+                    <xsd:enumeration value="Bluetooth"/>
+                    <xsd:enumeration value="WiFi"/>
+                    <xsd:enumeration value="ThreeG"/>
+                    <xsd:enumeration value="CanHi"/>
+                    <xsd:enumeration value="CanLo"/>
+                    <xsd:enumeration value="Ethernet"/>
+                    <xsd:enumeration value="Flexray"/>
+                    <xsd:enumeration value="LIN"/>
+                    <xsd:enumeration value="J1939"/>
+                    <xsd:enumeration value="ISOBUS"/>
+                    <xsd:enumeration value="MOST25"/>
+                    <xsd:enumeration value="MOST50"/>
+                    <xsd:enumeration value="MOST150"/>
+                    <xsd:enumeration value="NotSet"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="type">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN">
+                    <xsd:enumeration value="RF"/>
+                    <xsd:enumeration value="Electrical"/>
+                    <xsd:enumeration value="Optical"/>
+                    <xsd:enumeration value="Software"/>
+                    <xsd:enumeration value="NotSet"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="SignalConnectionType">
+        <xsd:attribute name="port" type="xsd:IDREF"/>
+    </xsd:complexType>
+    <xsd:complexType name="ExtendedAttributeType">
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="value" type="xsd:string"/>
+    </xsd:complexType>
+    <xsd:complexType name="ClusterType">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="clusterfunction">
+                <xsd:complexType>
+                    <xsd:attribute name="functionref" type="xsd:IDREF" use="required"/>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="interface">
+                <xsd:complexType>
+                    <xsd:complexContent>
+                        <xsd:extension base="InterfaceType">
+                            <xsd:attribute name="id" type="xsd:ID" use="required"/>
+                            <xsd:attribute name="name" type="xsd:string"/>
+                            <xsd:attribute name="shortdescription"
+                                           type="xsd:string"/>
+                            <xsd:attributeGroup ref="ArchitecturalAttributes"/>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="property"
+                         type="BasePropertyType"/>
+        </xsd:choice>
+        <xsd:attribute name="id"
+                       use="required"/>
+        <xsd:attribute name="name"/>
+        <xsd:attribute name="cpu"/>
+        <xsd:attribute name="latency"/>
+        <xsd:attribute name="sectionalarea"/>
+        <xsd:attribute name="costoverhead"/>
+        <xsd:attribute name="flash"/>
+        <xsd:attribute name="ram"/>
+        <xsd:attribute name="role"/>
+        <xsd:attribute name="rom"/>
+        <xsd:attribute name="volume"/>
+        <xsd:attribute name="type"/>
+    </xsd:complexType>
+    <xsd:complexType name="InterfaceType">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="property" type="BasePropertyType"/>
+        </xsd:choice>
+    </xsd:complexType>
+    <xsd:complexType name="CarrierType">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="interfaceref">
+                <xsd:complexType>
+                    <xsd:attribute name="interfacerefid" type="xsd:IDREF"/>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="signalmapping" type="SignalMappingType"/>
+            <xsd:element name="messagemapping" type="MessageMappingType"/>
+            <xsd:element name="property" type="BasePropertyType"/>
+        </xsd:choice>
+        <xsd:attribute name="id"/>
+        <xsd:attribute name="name"/>
+        <xsd:attribute name="bandwidth"/>
+        <xsd:attribute name="type"/>
+        <xsd:attribute name="impltype"/>
+        <xsd:attribute name="isDiscrete"/>
+    </xsd:complexType>
+    <xsd:complexType name="SignalMappingType">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="intref">
+                <xsd:complexType>
+                    <xsd:attribute name="intrefid" type="xsd:IDREF"/>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:choice>
+        <xsd:attribute name="signalrefid" type="xsd:IDREF"/>
+    </xsd:complexType>
+    <xsd:complexType name="MessageMappingType">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="intref">
+                <xsd:complexType>
+                    <xsd:attribute name="intrefid" type="xsd:IDREF"/>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:choice>
+        <xsd:attribute name="messagerefid" type="xsd:IDREF"/>
+    </xsd:complexType>
+    <xsd:simpleType name="OrientationConstraintType">
+        <xsd:restriction base="xsd:NMTOKEN">
+            <xsd:enumeration value="orthogonal"/>
+            <xsd:enumeration value="linear"/>
+            <xsd:enumeration value="co-located"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="PrefferedFlattenerType">
+        <xsd:restriction base="xsd:NMTOKEN">
+            <xsd:enumeration value="none"/>
+            <xsd:enumeration value="3d"/>
+            <xsd:enumeration value="ortho"/>
+            <xsd:enumeration value="unfolding"/>
+            <xsd:enumeration value="external"/>
+            <xsd:enumeration value="2d"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+</xsd:schema>

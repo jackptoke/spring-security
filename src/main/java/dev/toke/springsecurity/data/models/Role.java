@@ -1,4 +1,4 @@
-package dev.toke.springsecurity.models;
+package dev.toke.springsecurity.data.models;
 
 public enum Role {
     ADMIN("admin"),

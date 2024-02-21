@@ -1,6 +1,6 @@
 package dev.toke.springsecurity.config;
 
-import dev.toke.springsecurity.models.Customer;
+import dev.toke.springsecurity.data.models.Customer;
 import dev.toke.springsecurity.services.impl.CustomerServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
@@ -35,9 +35,9 @@ public class SpringUserDetails implements UserDetailsService {
             username = customers.get(0).getEmail();
             password = customers.get(0).getPassword();
             authorities = new ArrayList<>();
-            authorities.add(new SimpleGrantedAuthority(customers.get(0).getRole().label));
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + customers.get(0).getRole().label.toUpperCase()));
         }
-        log.info("User: " + username + " Password: " + password + " Role: " + authorities.toString());
+        log.info("User: " + username + " Password: " + password + " Role: " + authorities);
         return new User(username, password, authorities);
     }
 }
